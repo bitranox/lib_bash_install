@@ -13,54 +13,55 @@ function include_dependencies {
 
 include_dependencies
 
-function install_ubuntu_mate_desktop {
-    banner "Install ubuntu-mate-desktop - select LIGHTDM as Display Manager during Installation !"
+function install_language_packs {
+    # $1: language_code, like "de_AT" or "de_DE"
+    # install language pack and install language files for applications
+    # returns Error 100 if reboot is needed (in variable $?)
+    local language_code="${1}"
+    local language_code_short=$( echo "${language_code}" | cut -d "_" -f 1 )
+    local reboot_needed="False"
+    local language_support=""
+    local language_support_list=""
 
-    retry $(which sudo) apt-get install bindfs -y
-    retry $(which sudo) apt-get install lightdm -y
-    retry $(which sudo) apt-get install slick-greeter -y
-    retry $(which sudo) dpkg-reconfigure lightdm
 
-    retry $(which sudo) apt-get install grub2-themes-ubuntu-mate -y
-    retry $(which sudo) apt-get install ubuntu-mate-core -y
-    retry $(which sudo) apt-get install ubuntu-mate-artwork -y
-    retry $(which sudo) apt-get install ubuntu-mate-default-settings -y
-    retry $(which sudo) apt-get install ubuntu-mate-icon-themes -y
-    retry $(which sudo) apt-get install ubuntu-mate-wallpapers-complete -y
-    retry $(which sudo) apt-get install human-theme -y
-    retry $(which sudo) apt-get install mate-applet-brisk-menu -y
-    retry $(which sudo) apt-get install mate-system-monitor -y
-    retry $(which sudo) apt-get install language-pack-gnome-de -y
-    retry $(which sudo) apt-get install geany -y
-    retry $(which sudo) apt-get install mc -y
-    retry $(which sudo) apt-get install meld -y
-    retry $(which sudo) apt-get purge byobu -y
-    retry $(which sudo) apt-get purge vim -y
-    retry $(which sudo) dpkg-reconfigure lightdm
-}
+    if [[ "$(get_is_package_installed language-pack-${language_code_short})" == "False" ]]; then
+        retry $(which sudo) apt-get install language-pack-${language_code_short} -y
+        reboot_needed="True"
+    fi
+    if [[ "$(get_is_package_installed language-pack-${language_code_short}-base)" == "False" ]]; then
+        retry $(which sudo) apt-get install language-pack-${language_code_short}-base -y
+        reboot_needed="True"
+    fi
+    if [[ "$(get_is_package_installed manpages-${language_code_short})" == "False" ]]; then
+        retry $(which sudo) apt-get install manpages-${language_code_short} -y
+        reboot_needed="True"
+    fi
+    if [[ "$(get_is_package_installed language-pack-gnome-${language_code_short})" == "False" ]]; then
+        retry $(which sudo) apt-get install language-pack-gnome-${language_code_short} -y
+        reboot_needed="True"
+    fi
 
-function replace_netplan_coudinit_conf {
-    banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml"
-    backup_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
-    remove_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
-    if [[ $(get_is_hetzner_virtual_server) == "False" ]]; then  # @lib_bash/lib_helpers
-        $(which sudo) cp -f /usr/local/lib_bash_install/shared/config/etc/netplan/01-network-manager-all.yaml /etc/netplan/01-network-manager-all.yaml
+    $(which sudo) locale-gen "${language_code}"
+    $(which sudo) locale-gen "${language_code}.UTF-8"
+    $(which sudo) update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}"
+
+    language_support_list=$(check-language-support -l "${language_code_short}")
+    while IFS=$'\n' read -ra language_support_array; do
+      for language_support in "${language_support_array[@]}"; do
+          if [[ "$(get_is_package_installed ${language_support})" == "False" ]]; then
+            retry $(which sudo) apt-get install ${language_support} -y
+            reboot_needed="True"
+          fi
+      done
+    done <<< "${language_support_list}"
+
+    if [[ ${reboot_needed} == "True" ]]; then
+        return 100
+    else
+        return 0
     fi
 }
 
-
-function install_ubuntu_mate_desktop_recommended {
-    # $1 : swap_size, for instance "8GB"
-    local swap_size=$1
-    install_essentials
-    linux_update
-    install_swapfile "${swap_size}"
-    disable_hibernate
-    install_ubuntu_mate_desktop
-    replace_netplan_coudinit_conf
-    install_x2go
-    linux_update
-}
 
 ## make it possible to call functions without source include
 # Check if the function exists (bash specific)
