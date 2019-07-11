@@ -1,5 +1,10 @@
 #!/bin/bash
 
+function update_myself {
+    /usr/local/lib_bash_install/install_or_update.sh "${@}" || exit 0              # exit old instance after updates
+}
+
+
 function include_dependencies {
     source /usr/local/lib_bash/lib_color.sh
     source /usr/local/lib_bash/lib_retry.sh
@@ -105,6 +110,36 @@ function install_and_update_language_packs {
     fi
 }
 
+function install_swapfile {
+    # $1=size, e.g. "8GB"
+    local swap_size="${1}"
+    banner "Install ${swap_size} Swapfile"
+    $(which sudo) swapoff -a
+    $(which sudo) rm /swapfile
+    $(which sudo) mkdir -p /var/cache/swap
+    $(which sudo) fallocate -l "${swap_size}" /var/cache/swap/swap0
+    $(which sudo) chmod 0600 /var/cache/swap/swap0
+    $(which sudo) mkswap /var/cache/swap/swap0
+    $(which sudo) swapon /var/cache/swap/swap0
+}
+
+function disable_hibernate {
+    banner "Disable Hibernate"
+    $(which sudo) systemctl mask sleep.target
+    $(which sudo) systemctl mask suspend.target
+    $(which sudo) systemctl mask hibernate.target
+    $(which sudo) systemctl mask hybrid-sleep.target
+}
+
+function install_x2go {
+    banner "Install x2go Server"
+    retry $(which sudo) add-apt-repository ppa:x2go/stable -y
+    retry $(which sudo) apt-get update
+    retry $(which sudo) apt-get install x2goserver -y
+    retry $(which sudo) apt-get install x2goserver-xsession -y
+    retry $(which sudo) apt-get install x2goclient -y
+}
+
 
 ## make it possible to call functions without source include
 # Check if the function exists (bash specific)
@@ -113,6 +148,7 @@ if [[ ! -z "$1" ]]
         if declare -f "${1}" > /dev/null
         then
           # call arguments verbatim
+          update_myself ${0} ${@}  # pass own script name and parameters
           "$@"
         else
           # Show a helpful error
