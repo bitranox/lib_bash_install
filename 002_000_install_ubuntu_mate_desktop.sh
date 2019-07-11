@@ -38,7 +38,9 @@ function install_ubuntu_mate_desktop {
     retry $(which sudo) apt-get install meld -y | tee -a "${logfile}"
     retry $(which sudo) apt-get purge byobu -y | tee -a "${logfile}"
     retry $(which sudo) apt-get purge vim -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge mate-screensaver -y | tee -a "${logfile}"
     retry $(which sudo) dpkg-reconfigure lightdm | tee -a "${logfile}"
+
 }
 
 function replace_netplan_coudinit_conf {
