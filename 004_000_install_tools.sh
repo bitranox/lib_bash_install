@@ -49,8 +49,8 @@ function install_diverse_tools {
 function install_chrome {
     banner "Install google chrome"
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    retry $(which sudo) apt-get install apt-get fonts-liberation -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get install apt-get xdg-utils -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install fonts-liberation -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install xdg-utils -y | tee -a "${logfile}"
     retry $(which sudo) wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
     retry $(which sudo) dpkg -i google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
     $(which sudo) rm -f ./google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
