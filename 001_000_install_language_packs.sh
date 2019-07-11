@@ -23,21 +23,24 @@ function install_language_packs {
     local language_support=""
     local language_support_list=""
 
+    local own_script_name=$(get_own_script_name)
+    local logfile="${HOME}/log_lib_bash_install_${own_script_name%.*}.log"
+
 
     if [[ "$(get_is_package_installed language-pack-${language_code_short})" == "False" ]]; then
-        retry $(which sudo) apt-get install language-pack-${language_code_short} -y
+        retry $(which sudo) apt-get install language-pack-${language_code_short} -y | tee -a "${logfile}"
         reboot_needed="True"
     fi
     if [[ "$(get_is_package_installed language-pack-${language_code_short}-base)" == "False" ]]; then
-        retry $(which sudo) apt-get install language-pack-${language_code_short}-base -y
+        retry $(which sudo) apt-get install language-pack-${language_code_short}-base -y  | tee -a "${logfile}"
         reboot_needed="True"
     fi
     if [[ "$(get_is_package_installed manpages-${language_code_short})" == "False" ]]; then
-        retry $(which sudo) apt-get install manpages-${language_code_short} -y
+        retry $(which sudo) apt-get install manpages-${language_code_short} -y  | tee -a "${logfile}"
         reboot_needed="True"
     fi
     if [[ "$(get_is_package_installed language-pack-gnome-${language_code_short})" == "False" ]]; then
-        retry $(which sudo) apt-get install language-pack-gnome-${language_code_short} -y
+        retry $(which sudo) apt-get install language-pack-gnome-${language_code_short} -y  | tee -a "${logfile}"
         reboot_needed="True"
     fi
 
@@ -49,7 +52,7 @@ function install_language_packs {
     while IFS=$'\n' read -ra language_support_array; do
       for language_support in "${language_support_array[@]}"; do
           if [[ "$(get_is_package_installed ${language_support})" == "False" ]]; then
-            retry $(which sudo) apt-get install ${language_support} -y
+            retry $(which sudo) apt-get install ${language_support} -y  | tee -a "${logfile}"
             reboot_needed="True"
           fi
       done

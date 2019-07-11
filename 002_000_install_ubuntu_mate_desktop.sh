@@ -16,35 +16,41 @@ include_dependencies
 function install_ubuntu_mate_desktop {
     banner "Install ubuntu-mate-desktop - select LIGHTDM as Display Manager during Installation !"
 
-    retry $(which sudo) apt-get install bindfs -y
-    retry $(which sudo) apt-get install lightdm -y
-    retry $(which sudo) apt-get install slick-greeter -y
-    retry $(which sudo) dpkg-reconfigure lightdm
+    local own_script_name=$(get_own_script_name)
+    local logfile="${HOME}/log_lib_bash_install_${own_script_name%.*}.log"
 
-    retry $(which sudo) apt-get install grub2-themes-ubuntu-mate -y
-    retry $(which sudo) apt-get install ubuntu-mate-core -y
-    retry $(which sudo) apt-get install ubuntu-mate-artwork -y
-    retry $(which sudo) apt-get install ubuntu-mate-default-settings -y
-    retry $(which sudo) apt-get install ubuntu-mate-icon-themes -y
-    retry $(which sudo) apt-get install ubuntu-mate-wallpapers-complete -y
-    retry $(which sudo) apt-get install human-theme -y
-    retry $(which sudo) apt-get install mate-applet-brisk-menu -y
-    retry $(which sudo) apt-get install mate-system-monitor -y
-    retry $(which sudo) apt-get install language-pack-gnome-de -y
-    retry $(which sudo) apt-get install geany -y
-    retry $(which sudo) apt-get install mc -y
-    retry $(which sudo) apt-get install meld -y
-    retry $(which sudo) apt-get purge byobu -y
-    retry $(which sudo) apt-get purge vim -y
-    retry $(which sudo) dpkg-reconfigure lightdm
+    retry $(which sudo) apt-get install bindfs -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install lightdm -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install slick-greeter -y | tee -a "${logfile}"
+    retry $(which sudo) dpkg-reconfigure lightdm | tee -a "${logfile}"
+
+    retry $(which sudo) apt-get install grub2-themes-ubuntu-mate -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install ubuntu-mate-core -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install ubuntu-mate-artwork -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install ubuntu-mate-default-settings -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install ubuntu-mate-icon-themes -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install ubuntu-mate-wallpapers-complete -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install human-theme -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install mate-applet-brisk-menu -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install mate-system-monitor -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install language-pack-gnome-de -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install geany -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install mc -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install meld -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge byobu -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge vim -y | tee -a "${logfile}"
+    retry $(which sudo) dpkg-reconfigure lightdm | tee -a "${logfile}"
 }
 
 function replace_netplan_coudinit_conf {
+    local own_script_name=$(get_own_script_name)
+    local logfile="${HOME}/log_lib_bash_install_${own_script_name%.*}.log"
+
     if [[ $(get_is_hetzner_virtual_server) == "False" ]]; then  # @lib_bash/lib_helpers
-        banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml"
+        banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml" | tee -a "${logfile}"
         backup_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
         remove_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
-        $(which sudo) cp -f /usr/local/lib_bash_install/shared/config/etc/netplan/01-network-manager-all.yaml /etc/netplan/01-network-manager-all.yaml
+        $(which sudo) cp -f /usr/local/lib_bash_install/shared/config/etc/netplan/01-network-manager-all.yaml /etc/netplan/01-network-manager-all.yaml | tee -a "${logfile}"
     fi
 }
 
