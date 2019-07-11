@@ -14,6 +14,7 @@ function include_dependencies {
 
 function remove_unnecessary {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    banner "remove_unnecessary"   | tee -a "${logfile}"
 
     ### remove Canonical Reporting
     $(which sudo) apt-get purge whoopsie -y  | tee -a "${logfile}"

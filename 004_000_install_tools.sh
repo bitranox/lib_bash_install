@@ -13,8 +13,8 @@ function include_dependencies {
 }
 
 function install_diverse_tools {
-    banner "install needed tools : build-essential, mc, geany, meld, synaptic, x2goclient"
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    banner "install needed tools : build-essential, mc, geany, meld, synaptic, x2goclient"  | tee -a "${logfile}"
 
     ### remove Canonical Reporting
     $(which sudo) apt-get purge whoopsie -y | tee -a "${logfile}"
@@ -47,8 +47,8 @@ function install_diverse_tools {
 
 
 function install_chrome {
-    banner "Install google chrome"
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    banner "Install google chrome" | tee -a "${logfile}"
     retry $(which sudo) apt-get install fonts-liberation -y | tee -a "${logfile}"
     retry $(which sudo) apt-get install xdg-utils -y | tee -a "${logfile}"
     retry $(which sudo) wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
@@ -57,8 +57,8 @@ function install_chrome {
 }
 
 function install_chrome_remote_desktop {
-    banner "Install google chrome remote desktop"
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    banner "Install google chrome remote desktop" | tee -a "${logfile}"
     retry $(which sudo) apt-get install xvfb -y | tee -a "${logfile}"
     retry $(which sudo) apt-get install xbase-clients -y | tee -a "${logfile}"
     retry $(which sudo) apt-get install python-psutil -y | tee -a "${logfile}"

@@ -15,26 +15,16 @@ function include_dependencies {
 include_dependencies
 
 
-function install_lxd_container_system {
-    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    banner "snap Install LXD"  | tee -a "${logfile}"
-    # install snap
-    retry $(which sudo) apt-get install snap -y  | tee -a "${logfile}"
-    # install lxd
-    retry $(which sudo) snap install lxd  | tee -a "${logfile}"
+function configure_lxd_dns_systemd_resolved_depricated {
+    # systemd-resolved für domain .lxc von Bridge IP abfragen - DNSMASQ darf NICHT installiert sein !
+    local bridge_ip=$(ifconfig lxdbr0 | grep 'inet' | head -n 1 | tail -n 1 | awk '{print $2}')
+    $(which sudo) mkdir -p /etc/systemd/resolved.conf.d
+    $(which sudo) sh -c "echo \"[Resolve]\nDNS=$bridge_ip\nDomains=lxd\n\" > /etc/systemd/resolved.conf.d/lxdbr0.conf"
+    $(which sudo) service systemd-resolved restart
+    $(which sudo) service network-manager restart
+    $(which sudo) snap restart lxd
 }
 
-
-function add_user_to_lxd_group {
-    # $1: user_name
-    local user_name="${1}"
-    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    banner "Adding Current User ${user_name} to lxd group"  | tee -a "${logfile}"
-    # add current user to lxd group
-    $(which sudo) usermod --append --groups lxd "${user_name}" | tee -a "${logfile}"
-    # join the group for this session - not as root !
-    # init LXD - not as root !
-}
 
 
 ## make it possible to call functions without source include
@@ -53,4 +43,5 @@ if [[ ! -z "$1" ]]
           fail "\"${function_name}\" is not a known function name of \"${library_name}\""
         fi
 	fi
+
 

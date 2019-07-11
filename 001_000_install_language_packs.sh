@@ -24,6 +24,7 @@ function install_language_packs {
     local language_support_list=""
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
+    banner "update and install language packs"   | tee -a "${logfile}"
 
     if [[ "$(get_is_package_installed language-pack-${language_code_short})" == "False" ]]; then
         retry $(which sudo) apt-get install language-pack-${language_code_short} -y | tee -a "${logfile}"

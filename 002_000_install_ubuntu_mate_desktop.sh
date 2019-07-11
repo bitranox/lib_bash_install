@@ -14,9 +14,9 @@ function include_dependencies {
 include_dependencies
 
 function install_ubuntu_mate_desktop {
-    banner "Install ubuntu-mate-desktop - select LIGHTDM as Display Manager during Installation !"
-
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+
+    banner "Install ubuntu-mate-desktop - select LIGHTDM as Display Manager during Installation !"  | tee -a "${logfile}"
 
     retry $(which sudo) apt-get install bindfs -y | tee -a "${logfile}"
     retry $(which sudo) apt-get install lightdm -y | tee -a "${logfile}"
