@@ -44,9 +44,9 @@ function install_language_packs {
         reboot_needed="True"
     fi
 
-    $(which sudo) locale-gen "${language_code}"
-    $(which sudo) locale-gen "${language_code}.UTF-8"
-    $(which sudo) update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}"
+    $(which sudo) locale-gen "${language_code}" | tee -a "${logfile}"
+    $(which sudo) locale-gen "${language_code}.UTF-8" | tee -a "${logfile}"
+    $(which sudo) update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}" | tee -a "${logfile}"
 
     language_support_list=$(check-language-support -l "${language_code_short}")
     while IFS=$'\n' read -ra language_support_array; do
