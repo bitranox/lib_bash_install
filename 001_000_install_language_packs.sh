@@ -24,7 +24,7 @@ function install_language_packs {
     local language_support_list=""
 
     local own_script_name=$(get_own_script_name)
-    local logfile="${HOME}/log_lib_bash_install_${own_script_name%.*}.log"
+    local logfile="${HOME}"/log_lib_bash_install_"${own_script_name}%.*".log
 
 
     if [[ "$(get_is_package_installed language-pack-${language_code_short})" == "False" ]]; then
