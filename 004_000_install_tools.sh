@@ -14,51 +14,57 @@ function include_dependencies {
 
 function install_diverse_tools {
     banner "install needed tools : build-essential, mc, geany, meld, synaptic, x2goclient"
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+
     ### remove Canonical Reporting
-    $(which sudo) apt-get purge whoopsie -y
-    $(which sudo) apt-get purge libwhoopsie0 -y
-    $(which sudo) apt-get purge libwhoopsie-preferences0 -y
-    $(which sudo) apt-get purge apport -y
+    $(which sudo) apt-get purge whoopsie -y | tee -a "${logfile}"
+    $(which sudo) apt-get purge libwhoopsie0 -y | tee -a "${logfile}"
+    $(which sudo) apt-get purge libwhoopsie-preferences0 -y | tee -a "${logfile}"
+    $(which sudo) apt-get purge apport -y | tee -a "${logfile}"
     # essential
-    retry $(which sudo) apt-get install net-tools -y
-    retry $(which sudo) apt-get install git -y
+    retry $(which sudo) apt-get install net-tools -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install git -y | tee -a "${logfile}"
     # build-essential
-    retry $(which sudo) apt-get install build-essential -y
+    retry $(which sudo) apt-get install build-essential -y | tee -a "${logfile}"
     # midnight commander
-    retry $(which sudo) apt-get install mc -y
+    retry $(which sudo) apt-get install mc -y | tee -a "${logfile}"
     # geany Editor
-    retry $(which sudo) apt-get purge enchant -y
-    retry $(which sudo) apt-get purge gedit -y
-    retry $(which sudo) apt-get purge gedit-common -y
-    retry $(which sudo) apt-get purge pluma-common -y
-    retry $(which sudo) apt-get purge tilda -y
-    retry $(which sudo) apt-get purge vim -y
-    retry $(which sudo) apt-get install geany -y
+    retry $(which sudo) apt-get purge enchant -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge gedit -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge gedit-common -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge pluma-common -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge tilda -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get purge vim -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install geany -y | tee -a "${logfile}"
     # Meld Vergleichstool
-    retry $(which sudo) apt-get install meld -y
+    retry $(which sudo) apt-get install meld -y | tee -a "${logfile}"
     # Paketverwaltung
-    retry $(which sudo) apt-get install synaptic -y
+    retry $(which sudo) apt-get install synaptic -y | tee -a "${logfile}"
     # x2go client
-    retry $(which sudo) apt-get install x2goclient -y
+    retry $(which sudo) apt-get install x2goclient -y | tee -a "${logfile}"
 }
 
 
 
 function install_chrome {
     banner "Install google chrome"
-    retry $(which sudo) wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    retry $(which sudo) dpkg -i google-chrome-stable_current_amd64.deb
-    $(which sudo) rm -f ./google-chrome-stable_current_amd64.deb
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    retry $(which sudo) apt-get install apt-get fonts-liberation -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install apt-get xdg-utils -y | tee -a "${logfile}"
+    retry $(which sudo) wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
+    retry $(which sudo) dpkg -i google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
+    $(which sudo) rm -f ./google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
 }
 
 function install_chrome_remote_desktop {
     banner "Install google chrome remote desktop"
-    retry $(which sudo) apt-get install xvfb
-    retry $(which sudo) apt-get install xbase-clients
-    retry $(which sudo) apt-get install python-psutil
-    retry $(which sudo) wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb
-    retry $(which sudo) dpkg -i chrome-remote-desktop_current_amd64.deb
-    $(which sudo) rm -f ./chrome-remote-desktop_current_amd64.deb
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    retry $(which sudo) apt-get install xvfb -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install xbase-clients -y | tee -a "${logfile}"
+    retry $(which sudo) apt-get install python-psutil -y | tee -a "${logfile}"
+    retry $(which sudo) wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
+    retry $(which sudo) dpkg -i chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
+    $(which sudo) rm -f ./chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
     replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\""
 }
 
