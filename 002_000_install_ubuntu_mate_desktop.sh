@@ -40,10 +40,10 @@ function install_ubuntu_mate_desktop {
 }
 
 function replace_netplan_coudinit_conf {
-    banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml"
-    backup_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
-    remove_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
     if [[ $(get_is_hetzner_virtual_server) == "False" ]]; then  # @lib_bash/lib_helpers
+        banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml"
+        backup_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
+        remove_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
         $(which sudo) cp -f /usr/local/lib_bash_install/shared/config/etc/netplan/01-network-manager-all.yaml /etc/netplan/01-network-manager-all.yaml
     fi
 }
