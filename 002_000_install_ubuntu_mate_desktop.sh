@@ -16,8 +16,7 @@ include_dependencies
 function install_ubuntu_mate_desktop {
     banner "Install ubuntu-mate-desktop - select LIGHTDM as Display Manager during Installation !"
 
-    local own_script_name=$(get_own_script_name)
-    local logfile="${HOME}"/log_lib_bash_install_"${own_script_name}%.*".log
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
     retry $(which sudo) apt-get install bindfs -y | tee -a "${logfile}"
     retry $(which sudo) apt-get install lightdm -y | tee -a "${logfile}"
@@ -43,9 +42,7 @@ function install_ubuntu_mate_desktop {
 }
 
 function replace_netplan_coudinit_conf {
-    local own_script_name=$(get_own_script_name)
-    local logfile="${HOME}"/log_lib_bash_install_"${own_script_name}%.*".log
-
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
     if [[ $(get_is_hetzner_virtual_server) == "False" ]]; then  # @lib_bash/lib_helpers
         banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml" | tee -a "${logfile}"

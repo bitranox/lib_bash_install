@@ -22,10 +22,7 @@ function install_language_packs {
     local reboot_needed="False"
     local language_support=""
     local language_support_list=""
-
-    local own_script_name=$(get_own_script_name $0 $)
-    own_script_name="${own_script_name%.*}" | tr "/" "_"
-    local logfile="${HOME}/log_lib_bash_install_${own_script_name}.log"
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
 
     if [[ "$(get_is_package_installed language-pack-${language_code_short})" == "False" ]]; then

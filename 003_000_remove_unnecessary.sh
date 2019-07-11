@@ -13,9 +13,7 @@ function include_dependencies {
 }
 
 function remove_unnecessary {
-    local own_script_name=$(get_own_script_name)
-    local logfile="${HOME}"/log_lib_bash_install_"${own_script_name}%.*".log
-
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
     ### remove Canonical Reporting
     $(which sudo) apt-get purge whoopsie -y  | tee -a "${logfile}"
