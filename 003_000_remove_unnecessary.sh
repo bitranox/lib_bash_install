@@ -18,8 +18,6 @@ function remove_unnecessary {
     $(which sudo) apt-get purge libwhoopsie0 -y
     $(which sudo) apt-get purge libwhoopsie-preferences0 -y
     $(which sudo) apt-get purge apport -y
-    ### Spelling
-    $(which sudo) apt-get purge aspell -y
     ### Bluetooth
     $(which sudo) apt-get purge blueman -y
     $(which sudo) apt-get purge bluez -y
