@@ -79,7 +79,7 @@ function install_and_update_language_packs {
         reboot_needed="True"
     fi
 
-    $(which sudo) update-locale LANG="de_AT.UTF-8" LANGUAGE="de_AT:de"
+    $(which sudo) update-locale "LANG=\"de_AT.UTF-8\" LANGUAGE=\"de_AT:de\""
 
 
     local language_support_list=$(check-language-support -l de)
