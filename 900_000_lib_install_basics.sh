@@ -61,7 +61,7 @@ function install_and_update_language_packs {
     # install language pack and install language files for applications
     # returns Error 100 if reboot is needed (in variable $?)
     local language_code="${1}"
-    local language_code_short=$( echo "${language_code}" | cut d "_" f 1 )
+    local language_code_short=$( echo "${language_code}" | cut -d "_" -f 1 )
     local reboot_needed="False"
     local language_support=""
     local language_support_list=""
