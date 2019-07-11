@@ -46,6 +46,8 @@ function install_diverse_tools {
 
 function install_chrome {
     banner "Install google chrome"
+    retry $(which sudo) apt-get install fonts-liberation
+    retry $(which sudo) apt-get install xdg-utils
     retry $(which sudo) wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     retry $(which sudo) dpkg -i google-chrome-stable_current_amd64.deb
     $(which sudo) rm -f ./google-chrome-stable_current_amd64.deb
