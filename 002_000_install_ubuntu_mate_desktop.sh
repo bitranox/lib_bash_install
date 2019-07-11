@@ -40,6 +40,7 @@ function install_ubuntu_mate_desktop {
     retry $(which sudo) apt-get purge vim -y | tee -a "${logfile}"
     retry $(which sudo) apt-get purge mate-screensaver -y | tee -a "${logfile}"
     retry $(which sudo) dpkg-reconfigure lightdm | tee -a "${logfile}"
+    $(repair_user_permissions)
 
 }
 
