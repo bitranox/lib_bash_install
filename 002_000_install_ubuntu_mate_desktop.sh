@@ -16,6 +16,7 @@ include_dependencies
 function install_ubuntu_mate_desktop {
     banner "Install ubuntu-mate-desktop - select LIGHTDM as Display Manager during Installation !"
 
+    retry $(which sudo) apt-get install bindfs -y
     retry $(which sudo) apt-get install lightdm -y
     retry $(which sudo) apt-get install slick-greeter -y
     retry $(which sudo) dpkg-reconfigure lightdm
