@@ -57,10 +57,15 @@ function install_essentials {
 }
 
 function install_and_update_language_packs {
+    # $1: language_code, like "de_AT" or "de_DE"
     # install language pack and install language files for applications
     # returns Error 100 if reboot is needed (in variable $?)
-    banner "Install and Update Language Packs"
+    local language_code="${1}"
+    local language_code_short=$( echo "${language_code}" | cut d "_" f 1 )
     local reboot_needed="False"
+    local language_support=""
+    local language_support_list=""
+
 
     if [[ "$(get_is_package_installed language-pack-de)" == "False" ]]; then
         retry $(which sudo) apt-get install language-pack-de -y
@@ -79,12 +84,11 @@ function install_and_update_language_packs {
         reboot_needed="True"
     fi
 
-    $(which sudo) locale-gen de_AT
-    $(which sudo) locale-gen de_AT.UTF-8
-    $(which sudo) update-locale LANG="de_AT.UTF-8" LANGUAGE="de_AT"
+    $(which sudo) locale-gen "${language_code}"
+    $(which sudo) locale-gen "${language_code}.UTF-8"
+    $(which sudo) update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}"
 
-    local language_support_list=$(check-language-support -l de)
-    local language_support
+    language_support_list=$(check-language-support -l "${language_code_short}")
     while IFS=$'\n' read -ra language_support_array; do
       for language_support in "${language_support_array[@]}"; do
           if [[ "$(get_is_package_installed ${language_support})" == "False" ]]; then
