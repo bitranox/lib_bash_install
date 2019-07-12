@@ -97,12 +97,13 @@ function todo {
 # Check if the function exists (bash specific)
 if [[ ! -z "$1" ]]
     then
-        update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
         if declare -f "${1}" > /dev/null
         then
+          update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
           # call arguments verbatim
           "$@"
         else
+          update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
           # Show a helpful error
           function_name="${1}"
           library_name="${0}"
