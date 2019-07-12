@@ -99,7 +99,6 @@ function todo {
 # Check if the function exists (bash specific)
 if [[ ! -z "$1" ]]
     then
-        update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
         if declare -f "${1}" > /dev/null
         then
           # call arguments verbatim
@@ -111,5 +110,5 @@ if [[ ! -z "$1" ]]
           fail "\"${function_name}\" is not a known function name of \"${library_name}\""
         fi
 	fi
-
-
+    # update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
+update_myself
