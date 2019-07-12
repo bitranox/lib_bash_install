@@ -47,7 +47,7 @@ function sub_configure_network_manager {
     backup_file "/etc/NetworkManager/NetworkManager.conf"
     # local line_to_add="[main]${IFS}dns=none${IFS}"
     local line_to_add="[mainxx]"
-    replace_or_add_lines_containing_string_in_file "/etc/NetworkManager/NetworkManager.conf" "[main]" "${line_to_add}" "#"
+    replace_or_add_lines_containing_string_in_file "/etc/NetworkManager/NetworkManager.conf" "/[main/]" "${line_to_add}" "#"
 }
 
 
