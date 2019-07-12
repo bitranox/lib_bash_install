@@ -40,7 +40,7 @@ function create_shared_directory {
 }
 
 function configure_lxd_bridge_zone {
-    # $1: zone_name = "lxc"
+    # $1: zone_name = "lxd"
     # LXC Network dns einschalten - die container sind dann unter der domäne ".lxc" erreichbar
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "configure_lxd_bridge_zone to ${1}" | tee -a "${logfile}"

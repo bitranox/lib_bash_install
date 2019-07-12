@@ -26,25 +26,42 @@ function configure_lxd_dns_systemd_resolved_depricated {
 }
 
 
+function sub_configure_etc_hosts {
+    backup_file /etc/hosts
+    local line_to_add="127.0.10.0  $(hostname).localdomain $(hostname -f) $(hostname)  # adding loopback interface, just in case DNS is not working "
+    replace_or_add_lines_containing_string_in_file /etc/hosts $(hostname) ${line_to_add} "#"
+}
 
-#1 dnsmasq
-$(which sudo) apt-get install dnsmasq
+function sub_disable_systemd_resolved {
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    backup_file /etc/systemd/resolved.conf
+    local line_to_add="DNSStubListener=no  # preventing systemd-resolved to create a new /etc/resolv.conf"
+    replace_or_add_lines_containing_string_in_file /etc/hosts "DNSStubListener=" ${line_to_add} "#"
+    $(which sudo) sudo service systemd-resolved stop  | tee -a "${logfile}"
+    $(which sudo) sudo systemctl disable systemd-resolved  | tee -a "${logfile}"
 
-#2 /etc/hosts - to have loopback when DNS is not working
-backupfile /etc/hosts
-# adding loopback interface, just in case DNS is not working
-ADD 127.0.10.0  $(hostname).localdomain $(hostname -f) $(hostname)
+}
 
-#3 /etc/systemd/resolved.conf
+function sub_configure_network_manager {
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    backup_file /etc/NetworkManager/NetworkManager.conf
+    local line_to_add="[main]\ndns=none"
+    replace_or_add_lines_containing_string_in_file /etc/NetworkManager/NetworkManager.conf "[main]\n" ${line_to_add} "#"
+}
 
-ADD DNSStubListener=no
 
-#4 switch off and disable systemd-resolved
-sudo service systemd-resolved stop
-sudo systemctl disable systemd-resolved
+
+function configure_dnsmasq {
+    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
+    banner "configure dnsmasq" | tee -a "${logfile}"
+    $(which sudo) apt-get install dnsmasq | tee -a "${logfile}"
+    sub_configure_etc_hosts
+    sub_disable_systemd_resolved
+
+
+}
 
 #4b configure Network-manager
-/etc/NetworkManager/NetworkManager.conf
 
 [main]
 dns=none    # prevents to create a new /etc/resolv.conf
@@ -60,7 +77,7 @@ delete lines with nameserver .....
 
 add lines :
 # additional nameservers to have DNS when DNSMASQ is not working
-# domain lxc - we need to test that
+# search  lxc - we need to test that --> das funktioniert, machen wir aber über dnsmasq wenn geht
 nameserver 127.0.0.1 # dnsmasq
 nameserver 1.1.1.1 # fallback if dnsmasq not working
 nameserver 1.0.0.1 # fallback if dnsmasq not working
@@ -71,7 +88,7 @@ nameserver 9.9.9.9 # fallback if dnsmasq not working
 #7 configure DNSMASQ
 
 
-server=/lxc/<bridge_IP>
+server=/lxd/<bridge_IP>
 # PTR Queries: ???
 server=/3.168.192.in-addr.arpa/<bridge_IP> # 3.168.192 is the reverse of 192.168.3.0/24 Subnet - the adress of the bridge !
 

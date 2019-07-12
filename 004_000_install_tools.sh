@@ -65,7 +65,7 @@ function install_chrome_remote_desktop {
     retry $(which sudo) wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
     retry $(which sudo) dpkg -i chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
     $(which sudo) rm -f ./chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
-    replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\""
+    replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\"" "#"
 }
 
 
