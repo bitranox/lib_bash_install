@@ -93,6 +93,7 @@ function todo {
 
 
 
+
 ## make it possible to call functions without source include
 # Check if the function exists (bash specific)
 if [[ ! -z "$1" ]]
