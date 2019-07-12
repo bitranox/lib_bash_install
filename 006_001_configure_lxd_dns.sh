@@ -46,7 +46,7 @@ function sub_configure_network_manager {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     backup_file "/etc/NetworkManager/NetworkManager.conf"
     local line_to_add="[main]${IFS}dns=none${IFS}"
-    replace_or_add_lines_containing_string_in_file "/etc/NetworkManager/NetworkManager.conf" "[main]" "${line_to_add}" "#"
+    replace_or_add_lines_containing_string_in_file "/etc/NetworkManager/NetworkManager.conf" "\[main\]" "${line_to_add}" "#"
 }
 
 
@@ -98,13 +98,12 @@ function todo {
 # Check if the function exists (bash specific)
 if [[ ! -z "$1" ]]
     then
+        update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
         if declare -f "${1}" > /dev/null
         then
-          update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
           # call arguments verbatim
           "$@"
         else
-          update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
           # Show a helpful error
           function_name="${1}"
           library_name="${0}"
