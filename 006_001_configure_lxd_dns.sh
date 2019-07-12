@@ -27,16 +27,57 @@ function configure_lxd_dns_systemd_resolved_depricated {
 
 
 
-# dnsmasq
+#1 dnsmasq
 $(which sudo) apt-get install dnsmasq
 
-$(which sudo) cp /etc/resolv.conf   /etc/resolv.conf.lnk.original
+#2 /etc/hosts - to have loopback when DNS is not working
+backupfile /etc/hosts
+# adding loopback interface, just in case DNS is not working
+ADD 127.0.10.0  $(hostname).localdomain $(hostname -f) $(hostname)
 
-/etc/hosts : add : 127.0.10.0 <hostname>
+#3 /etc/systemd/resolved.conf
+
+ADD DNSStubListener=no
+
+#4 switch off and disable systemd-resolved
+sudo service systemd-resolved stop
+sudo systemctl disable systemd-resolved
+
+#4b configure Network-manager
+/etc/NetworkManager/NetworkManager.conf
+
+[main]
+dns=none    # prevents to create a new /etc/resolv.conf
 
 
-/etc/systemd/resolved.conf
-DNSStubListener=no
+#5 save the link to /var/run/systemd/resolve/stub-resolv.conf
+$(which sudo) cp /etc/resolv.conf /etc/resolv.conf.lnk.original
+$(which sudo) cp /var/run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
+#6 save the link to /var/run/systemd/resolve/stub-resolv.conf
+delete comments
+delete lines with nameserver .....
+
+add lines :
+# additional nameservers to have DNS when DNSMASQ is not working
+# domain lxc - we need to test that
+nameserver 127.0.0.1 # dnsmasq
+nameserver 1.1.1.1 # fallback if dnsmasq not working
+nameserver 1.0.0.1 # fallback if dnsmasq not working
+nameserver 9.9.9.9 # fallback if dnsmasq not working
+
+###### ab diesem Zeitpunkt geht das Nameservice wieder !
+
+#7 configure DNSMASQ
+
+
+server=/lxc/<bridge_IP>
+# PTR Queries: ???
+server=/3.168.192.in-addr.arpa/<bridge_IP> # 3.168.192 is the reverse of 192.168.3.0/24 Subnet - the adress of the bridge !
+
+???? add line dnssec  (check if working)
+
+
 
 
 

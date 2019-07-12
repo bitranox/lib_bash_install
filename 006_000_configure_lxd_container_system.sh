@@ -24,8 +24,9 @@ function set_uids {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "set_uids" | tee -a "${logfile}"
     # subuid, subgid auf den Hauptbenutzer (1000) setzen
-    $(which sudo) sh -c "echo \"1000:10000000:65536\nroot:$(id -u):1\n\" > /etc/subuid"
-    $(which sudo) sh -c "echo \"1000:10000000:65536\nroot:$(id -g):1\n\" > /etc/subgid"
+    $(which sudo) sh -c "echo \"root:1000:1\nlxd:100000:1000000000\nroot:100000:1000000000\n\" > /etc/subuid"
+    $(which sudo) sh -c "echo \"root:1000:1\nlxd:100000:1000000000\nroot:100000:1000000000\n\" > /etc/subgid"
+    $(which sudo) snap restart lxd  | tee -a "${logfile}"
 }
 
 function create_shared_directory {
