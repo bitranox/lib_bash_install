@@ -27,6 +27,20 @@ function configure_lxd_dns_systemd_resolved_depricated {
 
 
 
+# dnsmasq
+$(which sudo) apt-get install dnsmasq
+
+$(which sudo) cp /etc/resolv.conf   /etc/resolv.conf.lnk.original
+
+/etc/hosts : add : 127.0.10.0 <hostname>
+
+
+/etc/systemd/resolved.conf
+DNSStubListener=no
+
+
+
+
 ## make it possible to call functions without source include
 # Check if the function exists (bash specific)
 if [[ ! -z "$1" ]]
