@@ -61,41 +61,35 @@ function configure_dnsmasq {
 
 }
 
-#4b configure Network-manager
+function todo {
+    #5 save the link to /var/run/systemd/resolve/stub-resolv.conf
+    # $(which sudo) cp /etc/resolv.conf /etc/resolv.conf.lnk.original
+    # $(which sudo) cp /var/run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
-[main]
-dns=none    # prevents to create a new /etc/resolv.conf
+    #6 save the link to /var/run/systemd/resolve/stub-resolv.conf
+    # delete comments
+    # delete lines with nameserver .....
 
+    # add lines :
+    # additional nameservers to have DNS when DNSMASQ is not working
+    # search  lxc - we need to test that --> das funktioniert, machen wir aber über dnsmasq wenn geht
+    # nameserver 127.0.0.1 # dnsmasq
+    # nameserver 1.1.1.1 # fallback if dnsmasq not working
+    # nameserver 1.0.0.1 # fallback if dnsmasq not working
+    # nameserver 9.9.9.9 # fallback if dnsmasq not working
 
-#5 save the link to /var/run/systemd/resolve/stub-resolv.conf
-$(which sudo) cp /etc/resolv.conf /etc/resolv.conf.lnk.original
-$(which sudo) cp /var/run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+     ###### ab diesem Zeitpunkt geht das Nameservice wieder !
 
-#6 save the link to /var/run/systemd/resolve/stub-resolv.conf
-delete comments
-delete lines with nameserver .....
-
-add lines :
-# additional nameservers to have DNS when DNSMASQ is not working
-# search  lxc - we need to test that --> das funktioniert, machen wir aber über dnsmasq wenn geht
-nameserver 127.0.0.1 # dnsmasq
-nameserver 1.1.1.1 # fallback if dnsmasq not working
-nameserver 1.0.0.1 # fallback if dnsmasq not working
-nameserver 9.9.9.9 # fallback if dnsmasq not working
-
-###### ab diesem Zeitpunkt geht das Nameservice wieder !
-
-#7 configure DNSMASQ
+    #7 configure DNSMASQ
 
 
-server=/lxd/<bridge_IP>
-# PTR Queries: ???
-server=/3.168.192.in-addr.arpa/<bridge_IP> # 3.168.192 is the reverse of 192.168.3.0/24 Subnet - the adress of the bridge !
+    # server=/lxd/<bridge_IP>
+    # PTR Queries: ???
+    # server=/3.168.192.in-addr.arpa/<bridge_IP> # 3.168.192 is the reverse of 192.168.3.0/24 Subnet - the adress of the bridge !
 
-???? add line dnssec  (check if working)
-
-
-
+    # ???? add line dnssec  (check if working)
+    echo "todo"
+}
 
 
 
