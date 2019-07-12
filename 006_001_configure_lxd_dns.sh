@@ -44,7 +44,9 @@ function sub_disable_systemd_resolved {
 
 function sub_configure_network_manager {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    backup_file /etc/NetworkManager/NetworkManager.conf
+    echo "backup file"
+    backup_file "/etc/NetworkManager/NetworkManager.conf"
+    echo "after backup file"
     local line_to_add="[main]\ndns=none"
     replace_or_add_lines_containing_string_in_file /etc/NetworkManager/NetworkManager.conf "[main]\n" ${line_to_add} "#"
 }
