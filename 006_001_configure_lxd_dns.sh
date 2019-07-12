@@ -29,14 +29,14 @@ function configure_lxd_dns_systemd_resolved_depricated {
 function sub_configure_etc_hosts {
     backup_file "/etc/hosts"
     local line_to_add="127.0.10.0  $(hostname).localdomain $(hostname -f) $(hostname)  # adding loopback interface, just in case DNS is not working "
-    replace_or_add_lines_containing_string_in_file /etc/hosts $(hostname) ${line_to_add} "#"
+    replace_or_add_lines_containing_string_in_file "/etc/hosts" "$(hostname)" "${line_to_add}" "#"
 }
 
 function sub_disable_systemd_resolved {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     backup_file "/etc/systemd/resolved.conf"
     local line_to_add="DNSStubListener=no  # preventing systemd-resolved to create a new /etc/resolv.conf"
-    replace_or_add_lines_containing_string_in_file /etc/hosts "DNSStubListener=" ${line_to_add} "#"
+    replace_or_add_lines_containing_string_in_file "/etc/systemd/resolved.conf" "DNSStubListener=" "${line_to_add}" "#"
     $(which sudo) sudo service systemd-resolved stop  | tee -a "${logfile}"
     $(which sudo) sudo systemctl disable systemd-resolved  | tee -a "${logfile}"
 
@@ -44,11 +44,9 @@ function sub_disable_systemd_resolved {
 
 function sub_configure_network_manager {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    echo "backup file"
     backup_file "/etc/NetworkManager/NetworkManager.conf"
-    echo "after backup file"
     local line_to_add="[main]\ndns=none"
-    replace_or_add_lines_containing_string_in_file /etc/NetworkManager/NetworkManager.conf "[main]\n" ${line_to_add} "#"
+    replace_or_add_lines_containing_string_in_file "/etc/NetworkManager/NetworkManager.conf" "[main]\n" "${line_to_add}" "#"
 }
 
 
