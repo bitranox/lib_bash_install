@@ -95,6 +95,7 @@ function update_lib_bash_install {
             set_lib_bash_install_permissions
         )
         clr_green "lib_bash_install update complete"
+        exit 0
     else
         clr_green "lib_bash_install is up to date"
     fi
