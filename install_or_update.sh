@@ -1,13 +1,6 @@
 #!/bin/bash
 
-# function include_dependencies {
-#     my_dir="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"  # this gives the full path, even for sourced scripts
-#     source "${my_dir}/lib_color.sh"
-#     source "${my_dir}/lib_helpers.sh"
-#
-# }
-#
-# include_dependencies  # we need to do that via a function to have local scope of my_dir
+export bitranox_debug="True"
 
 function install_or_update_lib_bash {
     if [[ -f "/usr/local/lib_bash/install_or_update.sh" ]]; then
@@ -50,13 +43,13 @@ function is_lib_bash_install_installed {
 }
 
 
-function is_lib_bash_install_to_update {
+function is_lib_bash_install_is_up_to_date {
     local git_remote_hash=$(git --no-pager ls-remote --quiet https://github.com/bitranox/lib_bash_install.git | grep HEAD | awk '{print $1;}' )
     local git_local_hash=$( $(which sudo) cat /usr/local/lib_bash_install/.git/refs/heads/master)
     if [[ "${git_remote_hash}" == "${git_local_hash}" ]]; then
-        echo "False"
-    else
         echo "True"
+    else
+        echo "False"
     fi
 }
 
@@ -70,22 +63,21 @@ function install_lib_bash_install {
 function restart_calling_script {
     local caller_command=("$@")
     if [ ${#caller_command[@]} -eq 0 ]; then
-        echo "lib_bash_install: no caller command - exit 0"
+        if [[ "${bitranox_debug}" == "True" ]]; then echo "lib_bash_install: no caller command - exit 0"; fi
         # no parameters passed
         exit 0
     else
         # parameters passed, running the new Version of the calling script
-        echo "lib_bash_install: calling command : $@ - exit 100"
+        if [[ "${bitranox_debug}" == "True" ]]; then echo "lib_bash_install: calling command : ${@} - exit 100"; fi
         "${caller_command[@]}"
         # exit this old instance with error code 100
         exit 100
     fi
-
 }
 
 
 function update_lib_bash_install {
-    if [[ $(is_lib_bash_install_to_update) == "True" ]]; then
+
         clr_green "lib_bash_install needs to update"
         (
             # create a subshell to preserve current directory
@@ -96,17 +88,17 @@ function update_lib_bash_install {
         )
         clr_green "lib_bash_install update complete"
         exit 0
+}
+
+
+if [[ $(is_lib_bash_install_installed) == "True" ]]; then
+    if [[ $(is_lib_bash_install_is_up_to_date) == "False" ]]; then
+        update_lib_bash_install
+        restart_calling_script  "${@}"
     else
         clr_green "lib_bash_install is up to date"
     fi
-}
 
-
-}
-
-if [[ $(is_lib_bash_install_installed) == "True" ]]; then
-    update_lib_bash_install
-    restart_calling_script  "${@}" || exit 0 # needs caller name and parameters
 else
     install_lib_bash_install
 fi
