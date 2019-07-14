@@ -81,7 +81,6 @@ function update_lib_bash_install {
         clr_green "lib_bash_install update complete"
     else
         clr_green "lib_bash_install is up to date"
-        exit 0
     fi
 }
 
