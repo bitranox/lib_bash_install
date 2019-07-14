@@ -3,14 +3,10 @@
 export bitranox_debug="True"
 
 function update_myself {
-    if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\000_001_install_language_packs@update_myself: calling /usr/local/lib_bash_travis/install_or_update.sh ${@}"; fi
     /usr/local/lib_bash_install/install_or_update.sh "${@}" || exit 0              # exit old instance after updates
-    if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\000_001_install_language_packs@update_myself: calling /usr/local/lib_bash_travis/install_or_update.sh ${@} returned with exit code ${?}"; fi
 }
 
-if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\000_001_install_language_packs@main: calling update_myself ${0} ${@}"; fi
-update_myself ${0} ${@}                                                              # pass own script name and parameters
-if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\000_001_install_language_packs@main: returned from calling update_myself ${0} ${@} with ${?}"; fi
+update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions when called verbatim
 
 
 function include_dependencies {

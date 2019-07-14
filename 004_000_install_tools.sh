@@ -1,8 +1,15 @@
 #!/bin/bash
 
+
+export bitranox_debug="True"
+
+
 function update_myself {
     /usr/local/lib_bash_install/install_or_update.sh "${@}" || exit 0              # exit old instance after updates
 }
+
+
+update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions when called verbatim
 
 
 function include_dependencies {
@@ -11,6 +18,7 @@ function include_dependencies {
     source /usr/local/lib_bash/lib_helpers.sh
     source /usr/local/lib_bash_install/900_000_lib_install_basics.sh
 }
+
 
 function install_diverse_tools {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
@@ -45,7 +53,6 @@ function install_diverse_tools {
 }
 
 
-
 function install_chrome {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "Install google chrome" | tee -a "${logfile}"
@@ -55,6 +62,7 @@ function install_chrome {
     retry $(which sudo) dpkg -i google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
     $(which sudo) rm -f ./google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
 }
+
 
 function install_chrome_remote_desktop {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
@@ -73,7 +81,6 @@ function install_chrome_remote_desktop {
 # Check if the function exists (bash specific)
 if [[ ! -z "$1" ]]
     then
-        update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
         if declare -f "${1}" > /dev/null
         then
           # call arguments verbatim

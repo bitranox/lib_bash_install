@@ -1,8 +1,15 @@
 #!/bin/bash
 
+
+export bitranox_debug="True"
+
+
 function update_myself {
     /usr/local/lib_bash_install/install_or_update.sh "${@}" || exit 0              # exit old instance after updates
 }
+
+
+update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions when called verbatim
 
 
 function include_dependencies {
@@ -92,8 +99,6 @@ function todo {
 }
 
 
-
-
 ## make it possible to call functions without source include
 # Check if the function exists (bash specific)
 if [[ ! -z "$1" ]]
@@ -109,5 +114,3 @@ if [[ ! -z "$1" ]]
           fail "\"${function_name}\" is not a known function name of \"${library_name}\""
         fi
 	fi
-    # update_myself ${0} ${@}  > /dev/null 2>&1  # suppress messages here, not to spoil up answers from functions
-update_myself
