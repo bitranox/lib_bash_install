@@ -4,8 +4,9 @@ export bitranox_debug="True"
 
 function install_or_update_lib_bash {
     if [[ -f "/usr/local/lib_bash/install_or_update.sh" ]]; then
-        # $(which sudo) /usr/local/lib_bash/install_or_update.sh
-        echo "lib_bash already installed"
+        source /usr/local/lib_bash/lib_color.sh
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@install_or_update_lib_bash: lib bash already installed, calling /usr/local/lib_bash/install_or_update.sh"; fi
+        $(which sudo) /usr/local/lib_bash/install_or_update.sh
     else
         $(which sudo) rm -fR /usr/local/lib_bash
         $(which sudo) git clone https://github.com/bitranox/lib_bash.git /usr/local/lib_bash > /dev/null 2>&1
