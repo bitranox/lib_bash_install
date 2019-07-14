@@ -5,9 +5,10 @@ export bitranox_debug="True"
 function install_or_update_lib_bash {
     if [[ -f "/usr/local/lib_bash/install_or_update.sh" ]]; then
         source /usr/local/lib_bash/lib_color.sh
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@install_or_update_lib_bash: lib bash already installed, calling /usr/local/lib_bash/install_or_update.sh"; fi
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@install_or_update_lib_bash: lib_bash already installed, calling /usr/local/lib_bash/install_or_update.sh"; fi
         $(which sudo) /usr/local/lib_bash/install_or_update.sh
     else
+        if [[ "${bitranox_debug}" == "True" ]]; then echo "lib_bash_install\install_or_update.sh@install_or_update_lib_bash: installing lib_bash"; fi
         $(which sudo) rm -fR /usr/local/lib_bash
         $(which sudo) git clone https://github.com/bitranox/lib_bash.git /usr/local/lib_bash > /dev/null 2>&1
         $(which sudo) chmod -R 0755 /usr/local/lib_bash
@@ -44,7 +45,7 @@ function is_lib_bash_install_installed {
 }
 
 
-function is_lib_bash_install_is_up_to_date {
+function is_lib_bash_install_up_to_date {
     local git_remote_hash=$(git --no-pager ls-remote --quiet https://github.com/bitranox/lib_bash_install.git | grep HEAD | awk '{print $1;}' )
     local git_local_hash=$( $(which sudo) cat /usr/local/lib_bash_install/.git/refs/heads/master)
     if [[ "${git_remote_hash}" == "${git_local_hash}" ]]; then
@@ -64,40 +65,41 @@ function install_lib_bash_install {
 function restart_calling_script {
     local caller_command=("$@")
     if [ ${#caller_command[@]} -eq 0 ]; then
-        if [[ "${bitranox_debug}" == "True" ]]; then echo "lib_bash_install: no caller command - exit 0"; fi
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@restart_calling_script: no caller command - exit 0"; fi
         # no parameters passed
         exit 0
     else
         # parameters passed, running the new Version of the calling script
-        if [[ "${bitranox_debug}" == "True" ]]; then echo "lib_bash_install: calling command : ${@} - exit 100"; fi
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@restart_calling_script: calling command : ${@}"; fi
         "${caller_command[@]}"
-        # exit this old instance with error code 100
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@restart_calling_script: after calling command : ${@} - exiting with 100"; fi
         exit 100
     fi
 }
 
 
 function update_lib_bash_install {
-
-        clr_green "lib_bash_install needs to update"
-        (
-            # create a subshell to preserve current directory
-            cd /usr/local/lib_bash_install
-            $(which sudo) git fetch --all  > /dev/null 2>&1
-            $(which sudo) git reset --hard origin/master  > /dev/null 2>&1
-            set_lib_bash_install_permissions
-        )
-        clr_green "lib_bash_install update complete"
-        exit 0
+    if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@update_lib_bash_install: updating lib_bash_install"; fi
+    (
+        # create a subshell to preserve current directory
+        cd /usr/local/lib_bash_install
+        $(which sudo) git fetch --all  > /dev/null 2>&1
+        $(which sudo) git reset --hard origin/master  > /dev/null 2>&1
+        set_lib_bash_install_permissions
+    )
+    if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@update_lib_bash_install: lib_bash_install update complete"; fi
 }
 
 
 if [[ $(is_lib_bash_install_installed) == "True" ]]; then
-    if [[ $(is_lib_bash_install_is_up_to_date) == "False" ]]; then
+    if [[ $(is_lib_bash_install_up_to_date) == "False" ]]; then
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: lib_bash_install is not up to date"; fi
         update_lib_bash_install
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: call restart_calling_script ${@}"; fi
         restart_calling_script  "${@}"
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: call restart_calling_script ${@} returned ${?}"; fi
     else
-        clr_green "lib_bash_install is up to date"
+        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: lib_bash_install is up to date"; fi
     fi
 
 else
