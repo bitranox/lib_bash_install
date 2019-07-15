@@ -76,6 +76,10 @@ function install_chrome_remote_desktop {
     replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\"" "#"
 }
 
+function tests {
+	clr_green "no tests in ${0}"
+}
+
 
 ## make it possible to call functions without source include
 call_function_from_commandline "${0}" "${@}"
