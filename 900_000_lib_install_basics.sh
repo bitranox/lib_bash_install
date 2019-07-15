@@ -11,39 +11,21 @@ function include_dependencies {
 
 include_dependencies  # we need to do that via a function to have local scope of my_dir
 
-function install_dialog {
-    if [[ "$(get_is_package_installed dialog)" == "False" ]]; then
-        retry $(which sudo) apt-get install dialog -y > /dev/null 2>&1
+
+function install_package_if_not_present {
+    #$1: package
+    local package="${1}"
+    if [[ "$(get_is_package_installed ${package})" == "False" ]]; then
+        retry $(which sudo) apt-get install ${package} -y > /dev/null 2>&1
     fi
 }
 
-function install_git {
-    if [[ "$(get_is_package_installed git)" == "False" ]]; then
-        retry $(which sudo) apt-get install git -y > /dev/null 2>&1
-    fi
-}
 
-function install_net_tools {
-    if [[ "$(get_is_package_installed net-tools)" == "False" ]]; then
-        retry $(which sudo) apt-get install net-tools -y > /dev/null 2>&1
-    fi
-}
-
-function uninstall_whoopsie {
-    if [[ "$(get_is_package_installed whoopsie)" == "True" ]]; then
-        retry $(which sudo) apt-get purge whoopsie -y > /dev/null 2>&1
-    fi
-    if [[ "$(get_is_package_installed libwhoopsie0)" == "True" ]]; then
-        retry $(which sudo) apt-get purge libwhoopsie0 -y > /dev/null 2>&1
-    fi
-    if [[ "$(get_is_package_installed libwhoopsie-preferences0)" == "True" ]]; then
-        retry $(which sudo) apt-get purge libwhoopsie-preferences0 -y > /dev/null 2>&1
-    fi
-}
-
-function uninstall_apport {
-    if [[ "$(get_is_package_installed apport)" == "True" ]]; then
-        retry $(which sudo) apt-get purge apport -y > /dev/null 2>&1
+function uninstall_package_if_present {
+    #$1: package
+    local package="${1}"
+    if [[ "$(get_is_package_installed ${package})" == "True" ]]; then
+        retry $(which sudo) apt-get purge ${package} -y > /dev/null 2>&1
     fi
 }
 
@@ -51,11 +33,15 @@ function uninstall_apport {
 function install_essentials {
     # update / upgrade linux and clean / autoremove
     clr_bold clr_green "Installiere Essentielles am Host, entferne Apport und Whoopsie"
-    install_net_tools
-    install_git
-    install_dialog
-    uninstall_whoopsie
-    uninstall_apport
+    install_package_if_not_present "net_tools"
+    install_package_if_not_present "git"
+    install_package_if_not_present "dialog"
+    install_package_if_not_present "p7zip-full"
+    install_package_if_not_present "python3-pip"
+    uninstall_package_if_present "whoopsie"
+    uninstall_package_if_present "libwhoopsie0"
+    uninstall_package_if_present "libwhoopsie-preferences0"
+    uninstall_package_if_present "apport"
 }
 
 function install_swapfile {
