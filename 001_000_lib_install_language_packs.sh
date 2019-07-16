@@ -32,31 +32,31 @@ function install_language_packs {
     banner "update and install language packs"   | tee -a "${logfile}"
 
     if [[ "$(get_is_package_installed language-pack-${language_code_short})" == "False" ]]; then
-        retry $(which sudo) apt-get install language-pack-${language_code_short} -y | tee -a "${logfile}"
+        retry $(get_sudo) apt-get install language-pack-${language_code_short} -y | tee -a "${logfile}"
         reboot_needed="True"
     fi
     if [[ "$(get_is_package_installed language-pack-${language_code_short}-base)" == "False" ]]; then
-        retry $(which sudo) apt-get install language-pack-${language_code_short}-base -y  | tee -a "${logfile}"
+        retry $(get_sudo) apt-get install language-pack-${language_code_short}-base -y  | tee -a "${logfile}"
         reboot_needed="True"
     fi
     if [[ "$(get_is_package_installed manpages-${language_code_short})" == "False" ]]; then
-        retry $(which sudo) apt-get install manpages-${language_code_short} -y  | tee -a "${logfile}"
+        retry $(get_sudo) apt-get install manpages-${language_code_short} -y  | tee -a "${logfile}"
         reboot_needed="True"
     fi
     if [[ "$(get_is_package_installed language-pack-gnome-${language_code_short})" == "False" ]]; then
-        retry $(which sudo) apt-get install language-pack-gnome-${language_code_short} -y  | tee -a "${logfile}"
+        retry $(get_sudo) apt-get install language-pack-gnome-${language_code_short} -y  | tee -a "${logfile}"
         reboot_needed="True"
     fi
 
-    $(which sudo) locale-gen "${language_code}" | tee -a "${logfile}"
-    $(which sudo) locale-gen "${language_code}.UTF-8" | tee -a "${logfile}"
-    $(which sudo) update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}" | tee -a "${logfile}"
+    $(get_sudo) locale-gen "${language_code}" | tee -a "${logfile}"
+    $(get_sudo) locale-gen "${language_code}.UTF-8" | tee -a "${logfile}"
+    $(get_sudo) update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}" | tee -a "${logfile}"
 
     language_support_list=$(check-language-support -l "${language_code_short}")
     while IFS=$'\n' read -ra language_support_array; do
       for language_support in "${language_support_array[@]}"; do
           if [[ "$(get_is_package_installed ${language_support})" == "False" ]]; then
-            retry $(which sudo) apt-get install ${language_support} -y  | tee -a "${logfile}"
+            retry $(get_sudo) apt-get install ${language_support} -y  | tee -a "${logfile}"
             reboot_needed="True"
           fi
       done

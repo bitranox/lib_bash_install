@@ -26,11 +26,11 @@ include_dependencies
 function configure_lxd_dns_systemd_resolved_depricated {
     # systemd-resolved für domain .lxc von Bridge IP abfragen - DNSMASQ darf NICHT installiert sein !
     local bridge_ip=$(ifconfig lxdbr0 | grep 'inet' | head -n 1 | tail -n 1 | awk '{print $2}')
-    $(which sudo) mkdir -p /etc/systemd/resolved.conf.d
-    $(which sudo) sh -c "echo \"[Resolve]\nDNS=$bridge_ip\nDomains=lxd\n\" > /etc/systemd/resolved.conf.d/lxdbr0.conf"
-    $(which sudo) service systemd-resolved restart
-    $(which sudo) service network-manager restart
-    $(which sudo) snap restart lxd
+    $(get_sudo) mkdir -p /etc/systemd/resolved.conf.d
+    $(get_sudo) sh -c "echo \"[Resolve]\nDNS=$bridge_ip\nDomains=lxd\n\" > /etc/systemd/resolved.conf.d/lxdbr0.conf"
+    $(get_sudo) service systemd-resolved restart
+    $(get_sudo) service network-manager restart
+    $(get_sudo) snap restart lxd
 }
 
 
@@ -45,8 +45,8 @@ function sub_disable_systemd_resolved {
     backup_file "/etc/systemd/resolved.conf"
     local line_to_add="DNSStubListener=no  # preventing systemd-resolved to create a new /etc/resolv.conf"
     replace_or_add_lines_containing_string_in_file "/etc/systemd/resolved.conf" "DNSStubListener=" "${line_to_add}" "#"
-    $(which sudo) sudo service systemd-resolved stop  | tee -a "${logfile}"
-    $(which sudo) sudo systemctl disable systemd-resolved  | tee -a "${logfile}"
+    $(get_sudo) sudo service systemd-resolved stop  | tee -a "${logfile}"
+    $(get_sudo) sudo systemctl disable systemd-resolved  | tee -a "${logfile}"
 
 }
 
@@ -62,7 +62,7 @@ function sub_configure_network_manager {
 function configure_dnsmasq {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "configure dnsmasq" | tee -a "${logfile}"
-    $(which sudo) apt-get install dnsmasq | tee -a "${logfile}"
+    $(get_sudo) apt-get install dnsmasq | tee -a "${logfile}"
     sub_configure_etc_hosts
     sub_disable_systemd_resolved
 
@@ -71,8 +71,8 @@ function configure_dnsmasq {
 
 function todo {
     #5 save the link to /var/run/systemd/resolve/stub-resolv.conf
-    # $(which sudo) cp /etc/resolv.conf /etc/resolv.conf.lnk.original
-    # $(which sudo) cp /var/run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+    # $(get_sudo) cp /etc/resolv.conf /etc/resolv.conf.lnk.original
+    # $(get_sudo) cp /var/run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
     #6 save the link to /var/run/systemd/resolve/stub-resolv.conf
     # delete comments
