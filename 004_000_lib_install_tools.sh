@@ -24,32 +24,26 @@ function install_diverse_tools {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "install needed tools : build-essential, mc, geany, meld, synaptic, x2goclient"  | tee -a "${logfile}"
 
-    ### remove Canonical Reporting
-    $(which sudo) apt-get purge whoopsie -y | tee -a "${logfile}"
-    $(which sudo) apt-get purge libwhoopsie0 -y | tee -a "${logfile}"
-    $(which sudo) apt-get purge libwhoopsie-preferences0 -y | tee -a "${logfile}"
-    $(which sudo) apt-get purge apport -y | tee -a "${logfile}"
-    # essential
-    retry $(which sudo) apt-get install net-tools -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get install git -y | tee -a "${logfile}"
-    # build-essential
-    retry $(which sudo) apt-get install build-essential -y | tee -a "${logfile}"
-    # midnight commander
-    retry $(which sudo) apt-get install mc -y | tee -a "${logfile}"
-    # geany Editor
-    retry $(which sudo) apt-get purge enchant -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get purge gedit -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get purge gedit-common -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get purge pluma-common -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get purge tilda -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get purge vim -y | tee -a "${logfile}"
-    retry $(which sudo) apt-get install geany -y | tee -a "${logfile}"
-    # Meld Vergleichstool
-    retry $(which sudo) apt-get install meld -y | tee -a "${logfile}"
-    # Paketverwaltung
-    retry $(which sudo) apt-get install synaptic -y | tee -a "${logfile}"
-    # x2go client
-    retry $(which sudo) apt-get install x2goclient -y | tee -a "${logfile}"
+    uninstall_package_if_present "whoopsie" | tee -a "${logfile}"
+    uninstall_package_if_present "libwhoopsie0" | tee -a "${logfile}"
+    uninstall_package_if_present "libwhoopsie-preferences0" | tee -a "${logfile}"
+    uninstall_package_if_present "apport" | tee -a "${logfile}"
+    uninstall_package_if_present "enchant" | tee -a "${logfile}"
+    uninstall_package_if_present "gedit" | tee -a "${logfile}"
+    uninstall_package_if_present "gedit-common" | tee -a "${logfile}"
+    uninstall_package_if_present "pluma-common" | tee -a "${logfile}"
+    uninstall_package_if_present "tilda" | tee -a "${logfile}"
+    uninstall_package_if_present "vim" | tee -a "${logfile}"
+
+    install_package_if_not_present "net_tools" | tee -a "${logfile}"
+    install_package_if_not_present "git" | tee -a "${logfile}"
+    install_package_if_not_present "build-essential" | tee -a "${logfile}"
+    install_package_if_not_present "mc" | tee -a "${logfile}"
+    install_package_if_not_present "geany" | tee -a "${logfile}"
+    install_package_if_not_present "meld" | tee -a "${logfile}"
+    install_package_if_not_present "synaptic" | tee -a "${logfile}"
+    install_package_if_not_present "x2goclient" | tee -a "${logfile}"
+    install_package_if_not_present "keepass2" | tee -a "${logfile}"
 }
 
 
