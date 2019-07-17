@@ -96,8 +96,8 @@ function tests {
 }
 
 
-if [[ $(is_lib_bash_install_installed) == "True" ]]; then
-    if [[ $(is_lib_bash_install_up_to_date) == "False" ]]; then
+if is_lib_bash_install_installed; then
+    if is_lib_bash_install_up_to_date; then
         if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: lib_bash_install is not up to date"; fi
         update_lib_bash_install
         if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: call restart_calling_script ${@}"; fi
