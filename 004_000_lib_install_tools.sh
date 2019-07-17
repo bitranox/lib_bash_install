@@ -44,6 +44,7 @@ function install_diverse_tools {
     install_package_if_not_present "synaptic" | tee -a "${logfile}"
     install_package_if_not_present "x2goclient" | tee -a "${logfile}"
     install_package_if_not_present "keepass2" | tee -a "${logfile}"
+    install_package_if_not_present "ssh-askpass-gnome"  | tee -a "${logfile}"    # todo: add SUDO_ASKPASS=ssh-askpass in /etc/environment
 }
 
 

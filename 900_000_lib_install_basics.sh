@@ -38,6 +38,8 @@ function install_essentials {
     install_package_if_not_present "dialog"
     install_package_if_not_present "p7zip-full"
     install_package_if_not_present "python3-pip"
+    install_package_if_not_present "ssh-askpass"      # we need that if no tty is present to ask for sudo password # todo: add SUDO_ASKPASS=ssh-askpass in /etc/environment
+
     uninstall_package_if_present "whoopsie"
     uninstall_package_if_present "libwhoopsie0"
     uninstall_package_if_present "libwhoopsie-preferences0"
