@@ -52,7 +52,7 @@ function install_ubuntu_mate_desktop {
 function replace_netplan_coudinit_conf {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
-    if [[ $(get_is_hetzner_virtual_server) == "False" ]]; then  # @lib_bash/lib_helpers
+    if [[ ! $(is_hetzner_virtual_server) ]]; then  # @lib_bash/lib_helpers
         banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml" | tee -a "${logfile}"
         backup_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
         remove_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers

@@ -15,7 +15,7 @@ include_dependencies  # we need to do that via a function to have local scope of
 function install_package_if_not_present {
     #$1: package
     local package="${1}"
-    if [[ "$(get_is_package_installed ${package})" == "False" ]]; then
+    if [[ ! "$(is_package_installed ${package})" ]]; then
         retry $(get_sudo) apt-get install ${package} -y > /dev/null 2>&1
     fi
 }
@@ -24,7 +24,7 @@ function install_package_if_not_present {
 function uninstall_package_if_present {
     #$1: package
     local package="${1}"
-    if [[ "$(get_is_package_installed ${package})" == "True" ]]; then
+    if [[ "$(is_package_installed ${package})" ]]; then
         retry $(get_sudo) apt-get purge ${package} -y > /dev/null 2>&1
     fi
 }
