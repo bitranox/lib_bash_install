@@ -38,7 +38,8 @@ function install_essentials {
     install_package_if_not_present "dialog"
     install_package_if_not_present "p7zip-full"
     install_package_if_not_present "python3-pip"
-    install_package_if_not_present "ssh-askpass"      # we need that if no tty is present to ask for sudo password # todo: add SUDO_ASKPASS=ssh-askpass in /etc/environment
+    install_package_if_not_present "ssh-askpass"      # we need that if no tty is present to ask for sudo password # todo: add SUDO_ASKPASS=ssh-askpass in /etc/environment,
+                                                      # todo : export NO_AT_BRIDGE=1  # get rid of (ssh-askpass:25930): dbind-WARNING **: 18:46:12.019: Couldn't register with accessibility bus: Did not receive a reply.
 
     uninstall_package_if_present "whoopsie"
     uninstall_package_if_present "libwhoopsie0"
