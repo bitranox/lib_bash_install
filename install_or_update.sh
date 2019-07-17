@@ -62,21 +62,6 @@ function install_lib_bash_install {
     set_lib_bash_install_permissions
 }
 
-function restart_calling_script {
-    local caller_command=("${@}")
-    if [[ ${#caller_command[@]} -eq 0 ]]; then
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@restart_calling_script: no caller command - exit 0"; fi
-        # no parameters passed
-        exit 0
-    else
-        # parameters passed, running the new Version of the calling script
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@restart_calling_script: calling command : ${@}"; fi
-        eval "${caller_command[@]}"
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@restart_calling_script: after calling command : ${@} - exiting with 100"; fi
-        exit 100
-    fi
-}
-
 
 function update_lib_bash_install {
     if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@update_lib_bash_install: updating lib_bash_install"; fi
