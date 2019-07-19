@@ -52,23 +52,23 @@ function install_diverse_tools {
 function install_chrome {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "Install google chrome" | tee -a "${logfile}"
-    retry $(get_sudo) apt-get install fonts-liberation -y | tee -a "${logfile}"
-    retry $(get_sudo) apt-get install xdg-utils -y | tee -a "${logfile}"
-    retry $(get_sudo) wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
-    retry $(get_sudo) dpkg -i google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
-    $(get_sudo) rm -f ./google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
+    retry "$(cmd "sudo")" apt-get install fonts-liberation -y | tee -a "${logfile}"
+    retry "$(cmd "sudo")" apt-get install xdg-utils -y | tee -a "${logfile}"
+    retry "$(cmd "sudo")" wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
+    retry "$(cmd "sudo")" dpkg -i google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
+    "$(cmd "sudo")" rm -f ./google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
 }
 
 
 function install_chrome_remote_desktop {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "Install google chrome remote desktop" | tee -a "${logfile}"
-    retry $(get_sudo) apt-get install xvfb -y | tee -a "${logfile}"
-    retry $(get_sudo) apt-get install xbase-clients -y | tee -a "${logfile}"
-    retry $(get_sudo) apt-get install python-psutil -y | tee -a "${logfile}"
-    retry $(get_sudo) wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
-    retry $(get_sudo) dpkg -i chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
-    $(get_sudo) rm -f ./chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
+    retry "$(cmd "sudo")" apt-get install xvfb -y | tee -a "${logfile}"
+    retry "$(cmd "sudo")" apt-get install xbase-clients -y | tee -a "${logfile}"
+    retry "$(cmd "sudo")" apt-get install python-psutil -y | tee -a "${logfile}"
+    retry "$(cmd "sudo")" wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
+    retry "$(cmd "sudo")" dpkg -i chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
+    "$(cmd "sudo")" rm -f ./chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
     replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\"" "#"
 }
 

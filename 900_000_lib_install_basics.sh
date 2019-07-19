@@ -16,7 +16,7 @@ function install_package_if_not_present {
     #$1: package
     local package="${1}"
     if ! is_package_installed "${package}"; then
-        retry $(get_sudo) apt-get install ${package} -y > /dev/null 2>&1
+        retry "$(cmd "sudo")" apt-get install ${package} -y > /dev/null 2>&1
     fi
 }
 
@@ -25,7 +25,7 @@ function uninstall_package_if_present {
     #$1: package
     local package="${1}"
     if is_package_installed ${package}; then
-        retry $(get_sudo) apt-get purge ${package} -y > /dev/null 2>&1
+        retry "$(cmd "sudo")" apt-get purge ${package} -y > /dev/null 2>&1
     fi
 }
 
@@ -51,30 +51,30 @@ function install_swapfile {
     # $1=size, e.g. "8GB"
     local swap_size="${1}"
     banner "Install ${swap_size} Swapfile"
-    $(get_sudo) swapoff -a
-    $(get_sudo) rm /swapfile
-    $(get_sudo) mkdir -p /var/cache/swap
-    $(get_sudo) fallocate -l "${swap_size}" /var/cache/swap/swap0
-    $(get_sudo) chmod 0600 /var/cache/swap/swap0
-    $(get_sudo) mkswap /var/cache/swap/swap0
-    $(get_sudo) swapon /var/cache/swap/swap0
+    "$(cmd "sudo")" swapoff -a
+    "$(cmd "sudo")" rm /swapfile
+    "$(cmd "sudo")" mkdir -p /var/cache/swap
+    "$(cmd "sudo")" fallocate -l "${swap_size}" /var/cache/swap/swap0
+    "$(cmd "sudo")" chmod 0600 /var/cache/swap/swap0
+    "$(cmd "sudo")" mkswap /var/cache/swap/swap0
+    "$(cmd "sudo")" swapon /var/cache/swap/swap0
 }
 
 function disable_hibernate {
     banner "Disable Hibernate"
-    $(get_sudo) systemctl mask sleep.target
-    $(get_sudo) systemctl mask suspend.target
-    $(get_sudo) systemctl mask hibernate.target
-    $(get_sudo) systemctl mask hybrid-sleep.target
+    "$(cmd "sudo")" systemctl mask sleep.target
+    "$(cmd "sudo")" systemctl mask suspend.target
+    "$(cmd "sudo")" systemctl mask hibernate.target
+    "$(cmd "sudo")" systemctl mask hybrid-sleep.target
 }
 
 function install_x2go {
     banner "Install x2go Server"
-    retry $(get_sudo) add-apt-repository ppa:x2go/stable -y
-    retry $(get_sudo) apt-get update
-    retry $(get_sudo) apt-get install x2goserver -y
-    retry $(get_sudo) apt-get install x2goserver-xsession -y
-    retry $(get_sudo) apt-get install x2goclient -y
+    retry "$(cmd "sudo")" add-apt-repository ppa:x2go/stable -y
+    retry "$(cmd "sudo")" apt-get update
+    retry "$(cmd "sudo")" apt-get install x2goserver -y
+    retry "$(cmd "sudo")" apt-get install x2goserver-xsession -y
+    retry "$(cmd "sudo")" apt-get install x2goclient -y
 }
 
 function tests {

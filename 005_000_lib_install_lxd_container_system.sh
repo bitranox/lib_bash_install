@@ -23,9 +23,9 @@ function install_lxd_container_system {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "snap Install LXD"  | tee -a "${logfile}"
     # install snap
-    retry "$(get_sudo)" apt-get install snap -y  | tee -a "${logfile}"
+    retry ""$(cmd "sudo")"" apt-get install snap -y  | tee -a "${logfile}"
     # install lxd
-    retry "$(get_sudo)" snap install lxd  | tee -a "${logfile}"
+    retry ""$(cmd "sudo")"" snap install lxd  | tee -a "${logfile}"
 }
 
 
@@ -35,7 +35,7 @@ function add_user_to_lxd_group {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
     banner "Adding Current User ${user_name} to lxd group"  | tee -a "${logfile}"
     # add current user to lxd group
-    "$(get_sudo)" usermod --append --groups lxd "${user_name}" | tee -a "${logfile}"
+    ""$(cmd "sudo")"" usermod --append --groups lxd "${user_name}" | tee -a "${logfile}"
     # join the group for this session - not as root !
     # init LXD - not as root !
 }

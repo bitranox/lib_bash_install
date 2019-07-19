@@ -30,10 +30,10 @@ include_dependencies
 
 
 function set_lib_bash_install_permissions {
-    $(get_sudo) chmod -R 0755 /usr/local/lib_bash_install
-    $(get_sudo) chmod -R +x /usr/local/lib_bash_install/*.sh
-    $(get_sudo) chown -R root /usr/local/lib_bash_install || $(get_sudo) chown -R ${USER} /usr/local/lib_bash_install || echo "giving up set owner" # there is no user root on travis
-    $(get_sudo) chgrp -R root /usr/local/lib_bash_install || $(get_sudo) chgrp -R ${USER} /usr/local/lib_bash_install || echo "giving up set group" # there is no user root on travis
+    "$(cmd "sudo")" chmod -R 0755 /usr/local/lib_bash_install
+    "$(cmd "sudo")" chmod -R +x /usr/local/lib_bash_install/*.sh
+    "$(cmd "sudo")" chown -R root /usr/local/lib_bash_install || "$(cmd "sudo")" chown -R ${USER} /usr/local/lib_bash_install || echo "giving up set owner" # there is no user root on travis
+    "$(cmd "sudo")" chgrp -R root /usr/local/lib_bash_install || "$(cmd "sudo")" chgrp -R ${USER} /usr/local/lib_bash_install || echo "giving up set group" # there is no user root on travis
 }
 
 function is_lib_bash_install_installed {
@@ -47,7 +47,7 @@ function is_lib_bash_install_installed {
 
 function is_lib_bash_install_up_to_date {
     local git_remote_hash=$(git --no-pager ls-remote --quiet https://github.com/bitranox/lib_bash_install.git | grep HEAD | awk '{print $1;}' )
-    local git_local_hash=$( $(get_sudo) cat /usr/local/lib_bash_install/.git/refs/heads/master)
+    local git_local_hash=$( "$(cmd "sudo")" cat /usr/local/lib_bash_install/.git/refs/heads/master)
     if [[ "${git_remote_hash}" == "${git_local_hash}" ]]; then
         return 0
     else
@@ -57,8 +57,8 @@ function is_lib_bash_install_up_to_date {
 
 function install_lib_bash_install {
     clr_green "installing lib_bash_install"
-    $(get_sudo) rm -fR /usr/local/lib_bash_install
-    $(get_sudo) git clone https://github.com/bitranox/lib_bash_install.git /usr/local/lib_bash_install > /dev/null 2>&1
+    "$(cmd "sudo")" rm -fR /usr/local/lib_bash_install
+    "$(cmd "sudo")" git clone https://github.com/bitranox/lib_bash_install.git /usr/local/lib_bash_install > /dev/null 2>&1
     set_lib_bash_install_permissions
 }
 
@@ -68,8 +68,8 @@ function update_lib_bash_install {
     (
         # create a subshell to preserve current directory
         cd /usr/local/lib_bash_install
-        $(get_sudo) git fetch --all  > /dev/null 2>&1
-        $(get_sudo) git reset --hard origin/master  > /dev/null 2>&1
+        "$(cmd "sudo")" git fetch --all  > /dev/null 2>&1
+        "$(cmd "sudo")" git reset --hard origin/master  > /dev/null 2>&1
         set_lib_bash_install_permissions
     )
     if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@update_lib_bash_install: lib_bash_install update complete"; fi
