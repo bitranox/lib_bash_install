@@ -46,8 +46,9 @@ function is_lib_bash_install_installed {
 
 
 function is_lib_bash_install_up_to_date {
-    local git_remote_hash=$(git --no-pager ls-remote --quiet https://github.com/bitranox/lib_bash_install.git | grep HEAD | awk '{print $1;}' )
-    local git_local_hash=$( "$(cmd "sudo")" cat /usr/local/lib_bash_install/.git/refs/heads/master)
+    local git_remote_hash git_local_hash
+    git_remote_hash=$(git --no-pager ls-remote --quiet https://github.com/bitranox/lib_bash_install.git | grep HEAD | awk '{print $1;}' )
+    git_local_hash=$(cat /usr/local/lib_bash_install/.git/refs/heads/master)
     if [[ "${git_remote_hash}" == "${git_local_hash}" ]]; then
         return 0
     else
