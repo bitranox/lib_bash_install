@@ -72,5 +72,24 @@ function install_chrome_remote_desktop {
     replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\"" "#"
 }
 
+
+function fallback_to_mono_bionic_version {
+    echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | "$(cmd "sudo")" tee /etc/apt/sources.list.d/mono-official-stable.list
+    "$(cmd "sudo")" apt-get update
+}
+
+
+function install_mono_complete {
+        clr_green "Install mono complete"
+        retry "$(cmd "sudo")" apt-get install gnupg ca-certificates
+        retry "$(cmd "sudo")" apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        echo "deb https://download.mono-project.com/repo/ubuntu stable-${linux_release_name} main" | "$(cmd "sudo")" tee /etc/apt/sources.list.d/mono-official-stable.list
+        "$(cmd "sudo")" apt-get update || fallback_to_mono_bionic_version
+        retry "$(cmd "sudo")" apt-get install mono-devel -y
+        retry "$(cmd "sudo")" apt-get install mono-dbg -y
+        retry "$(cmd "sudo")" apt-get install mono-xsp4 -y
+        linux_update
+}
+
 ## make it possible to call functions without source include
 call_function_from_commandline "${0}" "${@}"
