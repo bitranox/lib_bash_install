@@ -64,9 +64,5 @@ function extend_default_profile {
     lxc profile set default raw.idmap "both 1000 1000"  | tee -a "${logfile}"
 }
 
-function tests {
-	clr_green "no tests in ${0}"
-}
-
 ## make it possible to call functions without source include
 call_function_from_commandline "${0}" "${@}"

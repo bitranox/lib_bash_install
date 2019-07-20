@@ -40,10 +40,6 @@ function add_user_to_lxd_group {
     # init LXD - not as root !
 }
 
-function tests {
-	clr_green "no tests in ${0}"
-}
-
 
 ## make it possible to call functions without source include
 call_function_from_commandline "${0}" "${@}"

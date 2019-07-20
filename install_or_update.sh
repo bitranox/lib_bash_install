@@ -76,10 +76,6 @@ function update_lib_bash_install {
 }
 
 
-function tests {
-	clr_green "no tests in ${0}"
-}
-
 
 if is_lib_bash_install_installed; then
     if is_lib_bash_install_up_to_date; then
