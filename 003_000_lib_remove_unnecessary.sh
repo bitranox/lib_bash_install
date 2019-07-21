@@ -1,9 +1,6 @@
 #!/bin/bash
 
 
-export bitranox_debug="True"
-
-
 function update_myself {
     /usr/local/lib_bash_install/install_or_update.sh "${@}" || exit 0              # exit old instance after updates
 }
