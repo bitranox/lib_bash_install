@@ -47,7 +47,7 @@ function install_essentials {
     # update / upgrade linux and clean / autoremove
     clr_bold clr_green "Installiere Essentielles am Host"
     debug "${dbg}" "Installiere Essentielles am Host - START"
-    install_package_if_not_present "net_tools" "True"
+    install_package_if_not_present "net_tools" "False"
     debug "${dbg}" "After Installing net_tools"
     install_package_if_not_present "git" "True"
     install_package_if_not_present "dialog" "True"
