@@ -18,7 +18,7 @@ function install_package_if_not_present {
         if [[ "${silent}" == "True" ]]; then
             retry_nofail "$(cmd "sudo")" apt-get install ${package} -y  > /dev/null 2>&1
             if ! is_package_installed "${package}"; then
-               clr_red "Installing ${package} failed"
+               fail "Installing ${package} failed"
             fi
         else
             retry "$(cmd "sudo")" apt-get install ${package} -y
@@ -37,6 +37,9 @@ function uninstall_package_if_present {
     if is_package_installed ${package}; then
         if [[ "${silent}" == "True" ]]; then
             retry "$(cmd "sudo")" apt-get purge ${package} -y
+            if is_package_installed "${package}"; then
+               fail "Uninstalling ${package} failed"
+            fi
         else
             retry "$(cmd "sudo")" apt-get purge ${package} -y  > /dev/null 2>&1
         fi
