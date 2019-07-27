@@ -82,6 +82,7 @@ function install_lib_bash_install {
 
 function update_lib_bash_install {
     (
+        clr_green "updating lib_bash_install"
         # create a subshell to preserve current directory
         cd /usr/local/lib_bash_install
         "$(cmd "sudo")" git fetch --all  > /dev/null 2>&1
