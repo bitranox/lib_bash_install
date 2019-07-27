@@ -23,6 +23,7 @@ function install_lib_bash {
 }
 
 
+
 function install_or_update_lib_bash {
     if [[ -f "/usr/local/lib_bash/install_or_update.sh" ]]; then
         # file exists - so update
