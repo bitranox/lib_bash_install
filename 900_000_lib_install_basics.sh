@@ -42,8 +42,11 @@ function uninstall_package_if_present {
 
 
 function install_essentials {
+    local dbg
+    dbg="True"
     # update / upgrade linux and clean / autoremove
     clr_bold clr_green "Installiere Essentielles am Host"
+    debug "${dbg}" "Installiere Essentielles am Host - START"
     install_package_if_not_present "net_tools" "True"
     install_package_if_not_present "git" "True"
     install_package_if_not_present "dialog" "True"
@@ -55,6 +58,7 @@ function install_essentials {
     uninstall_package_if_present "libwhoopsie0" "True"
     uninstall_package_if_present "libwhoopsie-preferences0" "True"
     uninstall_package_if_present "apport" "True"
+    debug "${dbg}" "Installiere Essentielles am Host - END"
 }
 
 function install_swapfile {
