@@ -48,6 +48,7 @@ function install_essentials {
     clr_bold clr_green "Installiere Essentielles am Host"
     debug "${dbg}" "Installiere Essentielles am Host - START"
     install_package_if_not_present "net_tools" "True"
+    debug "${dbg}" "After Installing net_tools"
     install_package_if_not_present "git" "True"
     install_package_if_not_present "dialog" "True"
     install_package_if_not_present "p7zip-full" "True"
