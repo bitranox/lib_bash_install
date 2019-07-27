@@ -32,34 +32,27 @@ function install_language_packs {
 
     banner "update and install language packs"   | tee -a "${logfile}"
 
-    if is_package_installed "language-pack-${language_code_short}"; then
-        retry "$(cmd "sudo")" apt-get install "language-pack-${language_code_short}" -y | tee -a "${logfile}"
-        reboot_needed="True"
-    fi
-    if is_package_installed "language-pack-${language_code_short}-base"; then
-        retry "$(cmd "sudo")" apt-get install language-pack-${language_code_short}-base -y  | tee -a "${logfile}"
-        reboot_needed="True"
-    fi
-    if is_package_installed "manpages-${language_code_short}"; then
-        retry "$(cmd "sudo")" apt-get install manpages-${language_code_short} -y  | tee -a "${logfile}"
-        reboot_needed="True"
-    fi
-    if is_package_installed "language-pack-gnome-${language_code_short}"; then
-        retry "$(cmd "sudo")" apt-get install language-pack-gnome-${language_code_short} -y  | tee -a "${logfile}"
-        reboot_needed="True"
-    fi
+    if ! is_package_installed "language-pack-${language_code_short}"; then reboot_needed="True"; fi
+    install_package_if_not_present "language-pack-${language_code_short}" "False"
 
-    "$(cmd "sudo")" locale-gen "${language_code}" | tee -a "${logfile}"
-    "$(cmd "sudo")" locale-gen "${language_code}.UTF-8" | tee -a "${logfile}"
-    "$(cmd "sudo")" update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}" | tee -a "${logfile}"
+    if ! is_package_installed "language-pack-${language_code_short}-base"; then reboot_needed="True"; fi
+    install_package_if_not_present "language-pack-${language_code_short}-base" "False"
+
+    if ! is_package_installed "manpages-${language_code_short}"; then reboot_needed="True"; fi
+    install_package_if_not_present "manpages-${language_code_short}" "False"
+
+    if ! is_package_installed "language-pack-gnome-${language_code_short}"; then reboot_needed="True"; fi
+    install_package_if_not_present "language-pack-gnome-${language_code_short}" "False"
+
+    "$(cmd "sudo")" locale-gen "${language_code}"
+    "$(cmd "sudo")" locale-gen "${language_code}.UTF-8"
+    "$(cmd "sudo")" update-locale LANG="${language_code}.UTF-8" LANGUAGE="${language_code}"
 
     language_support_list=$(check-language-support -l "${language_code_short}")
     while IFS=$'\n' read -ra language_support_array; do
       for language_support in "${language_support_array[@]}"; do
-          if ! is_package_installed "${language_support}"; then
-            retry "$(cmd "sudo")" apt-get install ${language_support} -y  | tee -a "${logfile}"
-            reboot_needed="True"
-          fi
+          if ! is_package_installed "${language_support}"; then reboot_needed="True"; fi
+          install_package_if_not_present "${language_support}" "False"
       done
     done <<< "${language_support_list}"
 
