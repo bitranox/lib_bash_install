@@ -46,7 +46,7 @@ function uninstall_package_if_present {
 
 function install_essentials {
     local dbg
-    dbg="False"
+    dbg="True"
     # update / upgrade linux and clean / autoremove
     clr_bold clr_green "Installiere Essentielles am Host"
     debug "${dbg}" "Installiere Essentielles am Host - START"
