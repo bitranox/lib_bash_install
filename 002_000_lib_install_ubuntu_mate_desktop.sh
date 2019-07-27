@@ -24,9 +24,11 @@ function install_ubuntu_mate_desktop {
 
     install_package_if_not_present "bindfs"
     install_package_if_not_present "lightdm"
-    install_package_if_not_present "slick-greeter"
-    install_package_if_not_present "lightdm"
+    if [[ "$(get_linux_release_number_major)" -ge 18 ]]; then
+        install_package_if_not_present "slick-greeter"  # fails at xenial and below
+    fi
 
+    install_package_if_not_present "lightdm"
     install_package_if_not_present "grub2-themes-ubuntu-mate"
     install_package_if_not_present "ubuntu-mate-core"
     install_package_if_not_present "ubuntu-mate-artwork"
