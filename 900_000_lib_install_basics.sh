@@ -7,54 +7,10 @@ export NO_AT_BRIDGE=1  # get rid of (ssh-askpass:25930): dbind-WARNING **: 18:46
 # call the update script if not sourced
 if [[ "${0}" == "${BASH_SOURCE[0]}" ]] && [[ -d "${BASH_SOURCE%/*}" ]]; then "${BASH_SOURCE%/*}"/install_or_update.sh else "${PWD}"/install_or_update.sh ; fi
 
-
-function install_package_if_not_present {
-    #$1: package
-    #$2: silent  # will install silenty when "True"
-    local package silent
-    package="${1}"
-    silent="${2}"
-    if ! is_package_installed "${package}"; then
-        if [[ "${silent}" == "True" ]]; then
-            retry_nofail "$(cmd "sudo")" apt-get install ${package} -y  > /dev/null 2>&1
-            if ! is_package_installed "${package}"; then
-               fail "Installing ${package} failed"
-            fi
-        else
-            retry "$(cmd "sudo")" apt-get install ${package} -y
-        fi
-    fi
-}
-
-
-function uninstall_package_if_present {
-    #$1: package
-    #$2: silent  # will install silenty when "True"
-    local package silent
-    package="${1}"
-    silent="${2}"
-
-    if is_package_installed ${package}; then
-        if [[ "${silent}" == "True" ]]; then
-            retry "$(cmd "sudo")" apt-get purge ${package} -y
-            if is_package_installed "${package}"; then
-               fail "Uninstalling ${package} failed"
-            fi
-        else
-            retry "$(cmd "sudo")" apt-get purge ${package} -y  > /dev/null 2>&1
-        fi
-    fi
-}
-
-
 function install_essentials {
-    local dbg
-    dbg="True"
     # update / upgrade linux and clean / autoremove
     clr_bold clr_green "Installiere Essentielles am Host"
-    debug "${dbg}" "Installiere Essentielles am Host - START"
     install_package_if_not_present "net-tools" "True"
-    debug "${dbg}" "After Installing net-tools"
     install_package_if_not_present "git" "True"
     install_package_if_not_present "dialog" "True"
     install_package_if_not_present "p7zip-full" "True"
@@ -65,7 +21,6 @@ function install_essentials {
     uninstall_package_if_present "libwhoopsie0" "True"
     uninstall_package_if_present "libwhoopsie-preferences0" "True"
     uninstall_package_if_present "apport" "True"
-    debug "${dbg}" "Installiere Essentielles am Host - END"
 }
 
 function install_swapfile {

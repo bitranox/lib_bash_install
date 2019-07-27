@@ -33,7 +33,7 @@ function install_language_packs {
     banner "update and install language packs"   | tee -a "${logfile}"
 
     if ! is_package_installed "language-pack-${language_code_short}"; then reboot_needed="True"; fi
-    install_package_if_not_present "language-pack-${language_code_short}" "False"
+    install_package_if_not_present "language-pack-${language_code_short}"
 
     if ! is_package_installed "language-pack-${language_code_short}-base"; then reboot_needed="True"; fi
     install_package_if_not_present "language-pack-${language_code_short}-base" "False"

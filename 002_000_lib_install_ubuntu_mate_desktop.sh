@@ -22,28 +22,28 @@ function install_ubuntu_mate_desktop {
 
     banner "Install ubuntu-mate-desktop - select LIGHTDM as Display Manager during Installation !"  | tee -a "${logfile}"
 
-    retry "$(cmd "sudo")" apt-get install bindfs -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install lightdm -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install slick-greeter -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" dpkg-reconfigure lightdm | tee -a "${logfile}"
+    install_package_if_not_present "bindfs"
+    install_package_if_not_present "lightdm"
+    install_package_if_not_present "slick-greeter"
+    install_package_if_not_present "lightdm"
 
-    retry "$(cmd "sudo")" apt-get install grub2-themes-ubuntu-mate -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install ubuntu-mate-core -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install ubuntu-mate-artwork -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install ubuntu-mate-default-settings -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install ubuntu-mate-icon-themes -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install ubuntu-mate-wallpapers-complete -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install human-theme -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install mate-applet-brisk-menu -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install mate-system-monitor -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install language-pack-gnome-de -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install geany -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install mc -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get install meld -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get purge byobu -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get purge vim -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" apt-get purge mate-screensaver -y | tee -a "${logfile}"
-    retry "$(cmd "sudo")" dpkg-reconfigure lightdm | tee -a "${logfile}"
+    install_package_if_not_present "grub2-themes-ubuntu-mate"
+    install_package_if_not_present "ubuntu-mate-core"
+    install_package_if_not_present "ubuntu-mate-artwork"
+    install_package_if_not_present "ubuntu-mate-default-settings"
+    install_package_if_not_present "ubuntu-mate-icon-themes"
+    install_package_if_not_present "ubuntu-mate-wallpapers-complete"
+    install_package_if_not_present "human-theme"
+    install_package_if_not_present "mate-applet-brisk-menu"
+    install_package_if_not_present "mate-system-monitor"
+    install_package_if_not_present "language-pack-gnome-de"
+    install_package_if_not_present "geany"
+    install_package_if_not_present "mc"
+    install_package_if_not_present "meld"
+    uninstall_package_if_present "byobu"
+    uninstall_package_if_present "vim"
+    uninstall_package_if_present "mate-screensaver"
+    retry "$(cmd "sudo")" dpkg-reconfigure lightdm
     $(repair_user_permissions)
 
 }
@@ -52,10 +52,10 @@ function replace_netplan_coudinit_conf {
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
     if is_hetzner_virtual_server; then  # @lib_bash/lib_helpers
-        banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml" | tee -a "${logfile}"
+        banner "replace /etc/netplan/50-cloud-init.yaml, create /etc/netplan/01-network-manager-all.yaml"
         backup_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
         remove_file /etc/netplan/50-cloud-init.yaml  # @lib_bash/lib_helpers
-        "$(cmd "sudo")" cp -f /usr/local/lib_bash_install/shared/config/etc/netplan/01-network-manager-all.yaml /etc/netplan/01-network-manager-all.yaml | tee -a "${logfile}"
+        "$(cmd "sudo")" cp -f /usr/local/lib_bash_install/shared/config/etc/netplan/01-network-manager-all.yaml /etc/netplan/01-network-manager-all.yaml
     fi
 }
 
