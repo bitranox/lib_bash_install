@@ -2,23 +2,24 @@
 
 export bitranox_debug="True"
 
-function install_or_update_lib_bash {
-    if [[ -f "/usr/local/lib_bash/install_or_update.sh" ]]; then
-        source /usr/local/lib_bash/lib_color.sh
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@install_or_update_lib_bash: lib_bash already installed, calling /usr/local/lib_bash/install_or_update.sh"; fi
-        $(command -v sudo 2>/dev/null) /usr/local/lib_bash/install_or_update.sh
-    else
-        if [[ "${bitranox_debug}" == "True" ]]; then echo "lib_bash_install\install_or_update.sh@install_or_update_lib_bash: installing lib_bash"; fi
-        $(command -v sudo 2>/dev/null) rm -fR /usr/local/lib_bash
-        $(command -v sudo 2>/dev/null) git clone https://github.com/bitranox/lib_bash.git /usr/local/lib_bash > /dev/null 2>&1
-        $(command -v sudo 2>/dev/null) chmod -R 0755 /usr/local/lib_bash
-        $(command -v sudo 2>/dev/null) chmod -R +x /usr/local/lib_bash/*.sh
-        $(command -v sudo 2>/dev/null) chown -R root /usr/local/lib_bash || $(command -v sudo 2>/dev/null) chown -R ${USER} /usr/local/lib_bash  || echo "giving up set owner" # there is no user root on travis
-        $(command -v sudo 2>/dev/null) chgrp -R root /usr/local/lib_bash || $(command -v sudo 2>/dev/null) chgrp -R ${USER} /usr/local/lib_bash  || echo "giving up set group" # there is no user root on travis
-    fi
+function install_lib_bash {
+    $(command -v sudo 2>/dev/null) rm -fR /usr/local/lib_bash
+    $(command -v sudo 2>/dev/null) git clone https://github.com/bitranox/lib_bash.git /usr/local/lib_bash > /dev/null 2>&1
+    $(command -v sudo 2>/dev/null) chmod -R 0755 /usr/local/lib_bash
+    $(command -v sudo 2>/dev/null) chmod -R +x /usr/local/lib_bash/*.sh
+    $(command -v sudo 2>/dev/null) chown -R root /usr/local/lib_bash || $(command -v sudo 2>/dev/null) chown -R ${USER} /usr/local/lib_bash  || echo "giving up set owner" # there is no user root on travis
+    $(command -v sudo 2>/dev/null) chgrp -R root /usr/local/lib_bash || $(command -v sudo 2>/dev/null) chgrp -R ${USER} /usr/local/lib_bash  || echo "giving up set group" # there is no user root on travis
 }
 
-install_or_update_lib_bash
+
+function is_lib_bash_installed {
+        if [[ -f "/usr/local/lib_bash/install_or_update.sh" ]]; then
+            return 0
+        else
+            return 1
+        fi
+}
+
 
 function include_dependencies {
     source /usr/local/lib_bash/lib_color.sh
@@ -78,17 +79,13 @@ function update_lib_bash_install {
 
 
 
-if is_lib_bash_install_installed; then
-    if is_lib_bash_install_up_to_date; then
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: lib_bash_install is not up to date"; fi
-        update_lib_bash_install
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: call restart_calling_script ${@}"; fi
-        restart_calling_script  "${@}"
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: call restart_calling_script ${@} returned ${?}"; fi
-    else
-        if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@main: lib_bash_install is up to date"; fi
-    fi
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]]; then    # if the script is not sourced
 
-else
-    install_lib_bash_install
+    if ! is_lib_bash_installed; then install_lib_bash ; fi
+
+    if ! is_lib_bash_install_up_to_date; then
+        update_lib_bash_install
+        source "$(readlink -f "${BASH_SOURCE[0]}")"      # source ourself
+        exit 0                                           # exit the old instance
+    fi
 fi
