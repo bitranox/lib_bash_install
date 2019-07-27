@@ -1,12 +1,11 @@
 #!/bin/bash
 
-function include_dependencies {
-    source /usr/local/lib_bash/lib_color.sh
-    source /usr/local/lib_bash/lib_retry.sh
-    source /usr/local/lib_bash/lib_helpers.sh
-}
+sudo_askpass="$(command -v ssh-askpass)"
+export SUDO_ASKPASS="${sudo_askpass}"
+export NO_AT_BRIDGE=1  # get rid of (ssh-askpass:25930): dbind-WARNING **: 18:46:12.019: Couldn't register with accessibility bus: Did not receive a reply.
 
-include_dependencies  # we need to do that via a function to have local scope of my_dir
+# call the update script if not sourced
+if [[ "${0}" == "${BASH_SOURCE[0]}" ]] && [[ -d "${BASH_SOURCE%/*}" ]]; then "${BASH_SOURCE%/*}"/install_or_update.sh else "${PWD}"/install_or_update.sh ; fi
 
 
 function install_package_if_not_present {
