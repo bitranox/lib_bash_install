@@ -18,77 +18,78 @@ function include_dependencies {
 }
 
 function remove_unnecessary {
-    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    banner "remove_unnecessary"   | tee -a "${logfile}"
+    banner "remove_unnecessary"
 
     ### remove Canonical Reporting
-    "$(cmd "sudo")" apt-get purge whoopsie -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge libwhoopsie0 -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge libwhoopsie-preferences0 -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge apport -y  | tee -a "${logfile}"
+    uninstall_package_if_present "whoopsie"
+    uninstall_package_if_present "libwhoopsie0"
+    uninstall_package_if_present "libwhoopsie-preferences0"
+    uninstall_package_if_present "apport"
     ### Bluetooth
-    "$(cmd "sudo")" apt-get purge blueman -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge bluez -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge bluez-cups -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge bluez-obexd -y  | tee -a "${logfile}"
+    uninstall_package_if_present "blueman"
+    uninstall_package_if_present "bluez"
+    uninstall_package_if_present "bluez-cups"
+    uninstall_package_if_present "bluez-obexd"
     # CD Brenner
-    "$(cmd "sudo")" apt-get purge brasero -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge brasero-cdrkit -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge brasero-common -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge cdrdao -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge dvd+rw-tools -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge dvdauthor -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge growisofs -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge libburn4 -y  | tee -a "${logfile}"
+    uninstall_package_if_present "brasero"
+    uninstall_package_if_present "brasero-cdrkit"
+    uninstall_package_if_present "brasero-common"
+    uninstall_package_if_present "cdrdao"
+    uninstall_package_if_present "dvd+rw-tools"
+    uninstall_package_if_present "dvdauthor"
+    uninstall_package_if_present "growisofs"
+    uninstall_package_if_present "libburn4"
     # Musik
-    "$(cmd "sudo")" apt-get purge rhythmbox -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge rhythmbox-data -y  | tee -a "${logfile}"
+    uninstall_package_if_present "rhythmbox"
+    uninstall_package_if_present "rhythmbox-data"
     # Braille für Blinde
-    "$(cmd "sudo")" apt-get purge brltty -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge libbrlapi0.6 -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge xzoom -y  | tee -a "${logfile}"
+    uninstall_package_if_present "brltty"
+    uninstall_package_if_present "libbrlapi0.6"
+    uninstall_package_if_present "xzoom"
     # Webcam
-    "$(cmd "sudo")" apt-get purge cheese -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge cheese-common -y  | tee -a "${logfile}"
+    uninstall_package_if_present "cheese"
+    uninstall_package_if_present "cheese-common"
     # Taschenrechner
-    "$(cmd "sudo")" apt-get purge dc -y  | tee -a "${logfile}"
+    uninstall_package_if_present "dc"
     # editoren / Terminals
-    "$(cmd "sudo")" apt-get purge enchant -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge gedit -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge gedit-common -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge pluma-common -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge tilda -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge vim -y  | tee -a "${logfile}"
+    uninstall_package_if_present "enchant"
+    uninstall_package_if_present "gedit"
+    uninstall_package_if_present "gedit-common"
+    uninstall_package_if_present "pluma-common"
+    uninstall_package_if_present "tilda"
+    uninstall_package_if_present "vim"
     # Bildbetrachter / Scanner
-    "$(cmd "sudo")" apt-get purge eog -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge shotwell-common -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge simple-scan -y  | tee -a "${logfile}"
+    uninstall_package_if_present "eog"
+    uninstall_package_if_present "shotwell-common"
+    uninstall_package_if_present "simple-scan"
     # Sprachausgabe
-    "$(cmd "sudo")" apt-get purge espeak-ng-data -y  | tee -a "${logfile}"
+    uninstall_package_if_present "espeak-ng-data"
     # Dateibetrachter
-    "$(cmd "sudo")" apt-get purge evince-common -y  | tee -a "${logfile}"
+    uninstall_package_if_present "evince-common"
     # video
-    "$(cmd "sudo")" apt-get purge ffmpegthumbnailer -y  | tee -a "${logfile}"
+    uninstall_package_if_present "ffmpegthumbnailer"
     # gdm3 Gnome Display Manager
-    "$(cmd "sudo")" apt-get purge gdm3 -y  | tee -a "${logfile}"
+    uninstall_package_if_present "gdm3"
     # Bildbearbeitung
-    "$(cmd "sudo")" apt-get purge imagemagick-6.q16 -y  | tee -a "${logfile}"
+    uninstall_package_if_present "imagemagick-6.q16"
+    uninstall_package_if_present "imagemagick"
     # Libre Office
-    "$(cmd "sudo")" apt-get purge libreoffice-common -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge ure -y  | tee -a "${logfile}"
+    uninstall_package_if_present "libreoffice-common"
+    uninstall_package_if_present "ure"
     # Dateimanager
-    "$(cmd "sudo")" apt-get purge nautilus -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge nautilus-data -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge nautilus-extension-gnome-terminal -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge nautilus-sendto -y  | tee -a "${logfile}"
+    uninstall_package_if_present "nautilus"
+    uninstall_package_if_present "nautilus-data"
+    uninstall_package_if_present "nautilus-extension-gnome-terminal"
+    uninstall_package_if_present "nautilus-sendto"
     # Bildschirmtastatur
-    "$(cmd "sudo")" apt-get purge onboard -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge onboard-common -y  | tee -a "${logfile}"
+    uninstall_package_if_present "onboard"
+    uninstall_package_if_present "onboard-common"
     # Dock
-    "$(cmd "sudo")" apt-get purge plank -y  | tee -a "${logfile}"
+    uninstall_package_if_present "plank"
     # thunderbird
-    "$(cmd "sudo")" apt-get purge thunderbird -y  | tee -a "${logfile}"
-    "$(cmd "sudo")" apt-get purge transmission-common -y  | tee -a "${logfile}"
+    uninstall_package_if_present "thunderbird"
+    # peer-to-peer
+    uninstall_package_if_present "transmission-common"
 }
 
 
