@@ -31,7 +31,7 @@ function install_diverse_tools {
     uninstall_package_if_present "tilda"
     uninstall_package_if_present "vim"
 
-    install_package_if_not_present "net_tools"
+    install_package_if_not_present "net-tools"
     install_package_if_not_present "git"
     install_package_if_not_present "build-essential"
     install_package_if_not_present "mc"
