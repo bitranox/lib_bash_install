@@ -91,7 +91,6 @@ function update_lib_bash_install {
 }
 
 
-
 if [[ "${0}" == "${BASH_SOURCE[0]}" ]]; then    # if the script is not sourced
     if ! is_lib_bash_install_installed; then install_lib_bash_install ; fi   # if it is just downloaded but not installed at the right place !!!
 
