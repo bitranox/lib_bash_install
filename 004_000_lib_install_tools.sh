@@ -67,25 +67,23 @@ function install_diverse_tools {
 
 
 function install_chrome {
-    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    banner "Install google chrome" | tee -a "${logfile}"
+    banner "Install google chrome"
     install_package_if_not_present "fonts-liberation"
     install_package_if_not_present "xdg-utils"
-    retry "$(cmd "sudo")" wget -nv -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
-    retry "$(cmd "sudo")" dpkg -i google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
-    "$(cmd "sudo")" rm -f ./google-chrome-stable_current_amd64.deb | tee -a "${logfile}"
+    retry "$(cmd "sudo")" wget -nv -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    retry "$(cmd "sudo")" dpkg -i google-chrome-stable_current_amd64.deb
+    "$(cmd "sudo")" rm -f ./google-chrome-stable_current_amd64.deb
 }
 
 
 function install_chrome_remote_desktop {
-    local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
-    banner "Install google chrome remote desktop" | tee -a "${logfile}"
+    banner "Install google chrome remote desktop"
     install_package_if_not_present "xvfb"
     install_package_if_not_present "xbase-clients"
     install_package_if_not_present "python-psutil"
-    retry "$(cmd "sudo")" wget -nv -c https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
-    retry "$(cmd "sudo")" dpkg -i chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
-    "$(cmd "sudo")" rm -f ./chrome-remote-desktop_current_amd64.deb | tee -a "${logfile}"
+    retry "$(cmd "sudo")" wget -nv -c https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb
+    retry "$(cmd "sudo")" dpkg -i chrome-remote-desktop_current_amd64.deb
+    "$(cmd "sudo")" rm -f ./chrome-remote-desktop_current_amd64.deb
     replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\"" "#"
 }
 
