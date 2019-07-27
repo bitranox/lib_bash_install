@@ -17,6 +17,25 @@ function include_dependencies {
 }
 
 
+function fallback_to_mono_bionic_version {
+    echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | "$(cmd "sudo")" tee /etc/apt/sources.list.d/mono-official-stable.list
+    "$(cmd "sudo")" apt-get update
+}
+
+
+function install_mono_complete {
+        clr_green "Install mono complete"
+        retry "$(cmd "sudo")" apt-get install gnupg ca-certificates
+        retry "$(cmd "sudo")" apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        echo "deb https://download.mono-project.com/repo/ubuntu stable-${linux_release_name} main" | "$(cmd "sudo")" tee /etc/apt/sources.list.d/mono-official-stable.list
+        "$(cmd "sudo")" apt-get update || fallback_to_mono_bionic_version
+        install_package_if_not_present "mono-devel"
+        install_package_if_not_present "mono-dbg"
+        install_package_if_not_present "mono-xsp4"
+        linux_update
+}
+
+
 function install_diverse_tools {
     banner "install needed tools : build-essential, mc, geany, meld, synaptic, x2goclient"
 
@@ -39,6 +58,7 @@ function install_diverse_tools {
     install_package_if_not_present "meld"
     install_package_if_not_present "synaptic"
     install_package_if_not_present "x2goclient"
+    install_mono_complete
     install_package_if_not_present "keepass2"
     install_package_if_not_present "ssh-askpass-gnome"                           # we need that if no tty is present to ask for sudo password # todo: add SUDO_ASKPASS=ssh-askpass in /etc/environment,
                                                                                  # todo : export NO_AT_BRIDGE=1  # get rid of (ssh-askpass:25930): dbind-WARNING **: 18:46:12.019: Couldn't register with accessibility bus: Did not receive a reply.
@@ -69,24 +89,6 @@ function install_chrome_remote_desktop {
     replace_or_add_lines_containing_string_in_file "/etc/environment" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES" "CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=\"5120x1600\"" "#"
 }
 
-
-function fallback_to_mono_bionic_version {
-    echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | "$(cmd "sudo")" tee /etc/apt/sources.list.d/mono-official-stable.list
-    "$(cmd "sudo")" apt-get update
-}
-
-
-function install_mono_complete {
-        clr_green "Install mono complete"
-        retry "$(cmd "sudo")" apt-get install gnupg ca-certificates
-        retry "$(cmd "sudo")" apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-        echo "deb https://download.mono-project.com/repo/ubuntu stable-${linux_release_name} main" | "$(cmd "sudo")" tee /etc/apt/sources.list.d/mono-official-stable.list
-        "$(cmd "sudo")" apt-get update || fallback_to_mono_bionic_version
-        install_package_if_not_present "mono-devel"
-        install_package_if_not_present "mono-dbg"
-        install_package_if_not_present "mono-xsp4"
-        linux_update
-}
 
 ## make it possible to call functions without source include
 call_function_from_commandline "${0}" "${@}"
