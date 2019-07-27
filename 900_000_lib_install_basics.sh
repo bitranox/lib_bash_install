@@ -16,7 +16,7 @@ function install_package_if_not_present {
     silent="${2}"
     if ! is_package_installed "${package}"; then
         if [[ "${silent}" == "True" ]]; then
-            retry "$(cmd "sudo")" apt-get install ${package} -y  > /dev/null 2>&1
+            retry_nofail "$(cmd "sudo")" apt-get install ${package} -y  > /dev/null 2>&1
             if ! is_package_installed "${package}"; then
                clr_red "Installing ${package} failed"
             fi
