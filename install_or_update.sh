@@ -81,7 +81,6 @@ function install_lib_bash_install {
 
 
 function update_lib_bash_install {
-    if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@update_lib_bash_install: updating lib_bash_install"; fi
     (
         # create a subshell to preserve current directory
         cd /usr/local/lib_bash_install
@@ -89,7 +88,6 @@ function update_lib_bash_install {
         "$(cmd "sudo")" git reset --hard origin/master  > /dev/null 2>&1
         set_lib_bash_install_permissions
     )
-    if [[ "${bitranox_debug}" == "True" ]]; then clr_blue "lib_bash_install\install_or_update.sh@update_lib_bash_install: lib_bash_install update complete"; fi
 }
 
 
