@@ -17,6 +17,9 @@ function install_package_if_not_present {
     if ! is_package_installed "${package}"; then
         if [[ "${silent}" == "True" ]]; then
             retry "$(cmd "sudo")" apt-get install ${package} -y  > /dev/null 2>&1
+            if ! is_package_installed "${package}"; then
+               clr_red "Installing ${package} failed"
+            fi
         else
             retry "$(cmd "sudo")" apt-get install ${package} -y
         fi
@@ -43,12 +46,12 @@ function uninstall_package_if_present {
 
 function install_essentials {
     local dbg
-    dbg="True"
+    dbg="False"
     # update / upgrade linux and clean / autoremove
     clr_bold clr_green "Installiere Essentielles am Host"
     debug "${dbg}" "Installiere Essentielles am Host - START"
-    install_package_if_not_present "net_tools" "False"
-    debug "${dbg}" "After Installing net_tools"
+    install_package_if_not_present "net-tools" "True"
+    debug "${dbg}" "After Installing net-tools"
     install_package_if_not_present "git" "True"
     install_package_if_not_present "dialog" "True"
     install_package_if_not_present "p7zip-full" "True"
