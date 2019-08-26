@@ -30,7 +30,6 @@ function install_or_update_lib_bash {
         $(command -v sudo 2>/dev/null) /usr/local/lib_bash/install_or_update.sh
     else
         install_lib_bash
-
     fi
 }
 
