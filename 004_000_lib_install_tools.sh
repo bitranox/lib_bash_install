@@ -58,7 +58,7 @@ function install_diverse_tools {
     install_package_if_not_present "meld"
     install_package_if_not_present "synaptic"
     install_package_if_not_present "x2goclient"
-    install_mono_complete
+    # install_mono_complete
     install_package_if_not_present "keepass2"
     install_package_if_not_present "ssh-askpass-gnome"                           # we need that if no tty is present to ask for sudo password # todo: add SUDO_ASKPASS=ssh-askpass in /etc/environment,
                                                                                  # todo : export NO_AT_BRIDGE=1  # get rid of (ssh-askpass:25930): dbind-WARNING **: 18:46:12.019: Couldn't register with accessibility bus: Did not receive a reply.
