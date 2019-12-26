@@ -29,11 +29,13 @@ function install_swapfile {
     banner "Install ${swap_size} Swapfile"
     "$(cmd "sudo")" swapoff -a
     "$(cmd "sudo")" rm /swapfile
+    "$(cmd "sudo")" rm /var/cache/swap/swap0
     "$(cmd "sudo")" mkdir -p /var/cache/swap
     "$(cmd "sudo")" fallocate -l "${swap_size}" /var/cache/swap/swap0
     "$(cmd "sudo")" chmod 0600 /var/cache/swap/swap0
     "$(cmd "sudo")" mkswap /var/cache/swap/swap0
     "$(cmd "sudo")" swapon /var/cache/swap/swap0
+    # todo - eintragen in fstab
 }
 
 function disable_hibernate {
