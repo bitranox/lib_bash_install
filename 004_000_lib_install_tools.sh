@@ -25,8 +25,8 @@ function fallback_to_mono_bionic_version {
 
 function install_mono_complete {
         clr_green "Install mono complete"
-        retry "$(cmd "sudo")" apt-get install gnupg ca-certificates
-        retry "$(cmd "sudo")" apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        retry_nofail "$(cmd "sudo")" apt-get install gnupg ca-certificates
+        retry_nofail "$(cmd "sudo")" apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
         echo "deb https://download.mono-project.com/repo/ubuntu stable-$(get_linux_release_name) main" | "$(cmd "sudo")" tee /etc/apt/sources.list.d/mono-official-stable.list
         "$(cmd "sudo")" apt-get update || fallback_to_mono_bionic_version
         install_package_if_not_present "mono-devel"
