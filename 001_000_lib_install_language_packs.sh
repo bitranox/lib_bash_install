@@ -30,7 +30,7 @@ function install_language_packs {
     local language_support_list=""
     local logfile=$(get_log_file_name "${0}" "${BASH_SOURCE}" )
 
-    banner "update and install language packs"   | tee -a "${logfile}"
+    banner "update and install language packs" | tee -a "${logfile}"
 
     if ! is_package_installed "language-pack-${language_code_short}"; then reboot_needed="True"; fi
     install_package_if_not_present "language-pack-${language_code_short}"
